@@ -1,0 +1,173 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - img "Compy" [ref=e5]
+      - generic [ref=e6]:
+        - generic [ref=e7]: Compy
+        - generic [ref=e8]: Local & private
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: "4"
+        - generic [ref=e12]: Notes
+      - generic [ref=e13]:
+        - generic [ref=e14]: "2"
+        - generic [ref=e15]: Sites
+    - navigation [ref=e16]:
+      - button "All notes 4" [ref=e17] [cursor=pointer]:
+        - img [ref=e19]
+        - generic [ref=e21]: All notes
+        - generic [ref=e22]: "4"
+      - button "Archive 0" [ref=e23] [cursor=pointer]:
+        - img [ref=e25]
+        - generic [ref=e28]: Archive
+        - generic [ref=e29]: "0"
+    - generic [ref=e30]:
+      - generic [ref=e31]: Colors
+      - generic [ref=e32]:
+        - button "Yellow" [ref=e33] [cursor=pointer]
+        - button "Green" [ref=e34] [cursor=pointer]
+        - button "Blue" [ref=e35] [cursor=pointer]
+        - button "Pink" [ref=e36] [cursor=pointer]
+        - button "Purple" [ref=e37] [cursor=pointer]
+    - generic [ref=e38]:
+      - generic [ref=e39]: Sites
+      - generic [ref=e40]:
+        - generic [ref=e41] [cursor=pointer]:
+          - generic [ref=e42]: A
+          - generic [ref=e43]: alametos.local
+          - generic [ref=e44]: "3"
+        - generic [ref=e45] [cursor=pointer]:
+          - generic [ref=e46]: G
+          - generic [ref=e47]: github.com
+          - generic [ref=e48]: "1"
+    - button "Import" [ref=e50] [cursor=pointer]:
+      - img [ref=e51]
+      - text: Import
+  - main [ref=e53]:
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - img [ref=e56]
+        - searchbox "Search notes, quotes, sites…" [ref=e59]
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]: Sort
+          - combobox "Sort" [ref=e63] [cursor=pointer]:
+            - option "Recently edited" [selected]
+            - option "Newest"
+            - option "By site"
+        - button "AI context" [ref=e64] [cursor=pointer]:
+          - img [ref=e65]
+          - text: AI context
+        - button "Select" [ref=e67] [cursor=pointer]:
+          - img [ref=e68]
+          - text: Select
+        - generic [ref=e72]:
+          - button "Copy for AI" [ref=e73] [cursor=pointer]:
+            - img [ref=e74]
+            - text: Copy for AI
+          - button "More export options" [ref=e76] [cursor=pointer]:
+            - img [ref=e77]
+    - generic [ref=e79]:
+      - generic [ref=e80] [cursor=pointer]:
+        - checkbox "0 selected" [ref=e81]
+        - generic [ref=e82]: 0 selected
+      - generic [ref=e83]:
+        - button "Copy for AI" [ref=e84] [cursor=pointer]
+        - button "✓ Mark done" [ref=e85] [cursor=pointer]
+        - button ".md" [ref=e86] [cursor=pointer]
+        - button "Delete" [ref=e87] [cursor=pointer]
+        - button "Cancel" [ref=e88] [cursor=pointer]
+    - generic [ref=e90]:
+      - article [ref=e91]:
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - generic [ref=e95]: A
+            - generic "https://alametos.local/panel" [ref=e96]: alametos.local
+            - generic [ref=e97]: 17:50
+          - generic [ref=e98]: "Şu an: belirlenmedi"
+          - generic [ref=e102]: standart 1000 TL olmalı defaultu
+          - generic [ref=e103]:
+            - generic [ref=e104]:
+              - button "Yellow" [ref=e105] [cursor=pointer]
+              - button "Green" [ref=e106] [cursor=pointer]
+              - button "Blue" [ref=e107] [cursor=pointer]
+              - button "Pink" [ref=e108] [cursor=pointer]
+              - button "Purple" [ref=e109] [cursor=pointer]
+            - link "Open page" [ref=e110] [cursor=pointer]:
+              - /url: https://alametos.local/panel
+              - img [ref=e111]
+            - button "Edit notes" [ref=e114] [cursor=pointer]:
+              - img [ref=e115]
+            - button "Mark done" [ref=e117] [cursor=pointer]:
+              - img [ref=e118]
+            - button "Delete" [ref=e120] [cursor=pointer]:
+              - img [ref=e121]
+      - article [ref=e123]:
+        - generic [ref=e125]:
+          - generic [ref=e126]:
+            - generic [ref=e127]: A
+            - generic "https://alametos.local/panel" [ref=e128]: alametos.local
+            - generic [ref=e129]: 15:51
+          - generic [ref=e131]: PAGE NOTE
+          - generic [ref=e135]: otomatik yetim eşleştirme olmalı varmı ?
+          - generic [ref=e136]:
+            - button "Edit notes" [ref=e137] [cursor=pointer]:
+              - img [ref=e138]
+            - button "Mark done" [ref=e140] [cursor=pointer]:
+              - img [ref=e141]
+            - button "Delete" [ref=e143] [cursor=pointer]:
+              - img [ref=e144]
+      - article [ref=e146]:
+        - generic [ref=e148]:
+          - generic [ref=e149]:
+            - generic [ref=e150]: A
+            - generic "https://alametos.local/billing" [ref=e151]: alametos.local
+            - generic [ref=e152]: 15:51
+          - generic [ref=e153]: ₺-5.000,00/ay
+          - generic [ref=e155]:
+            - generic [ref=e156]:
+              - generic [ref=e157]: "1"
+              - generic [ref=e158]: "-50000 girilebildi bu arıza"
+            - generic [ref=e159]:
+              - generic [ref=e160]: "2"
+              - generic [ref=e161]: validasyon ekle
+          - generic [ref=e162]:
+            - generic [ref=e163]:
+              - button "Yellow" [ref=e164] [cursor=pointer]
+              - button "Green" [ref=e165] [cursor=pointer]
+              - button "Blue" [ref=e166] [cursor=pointer]
+              - button "Pink" [ref=e167] [cursor=pointer]
+              - button "Purple" [ref=e168] [cursor=pointer]
+            - link "Open page" [ref=e169] [cursor=pointer]:
+              - /url: https://alametos.local/billing
+              - img [ref=e170]
+            - button "Edit notes" [ref=e173] [cursor=pointer]:
+              - img [ref=e174]
+            - button "Mark done" [ref=e176] [cursor=pointer]:
+              - img [ref=e177]
+            - button "Delete" [ref=e179] [cursor=pointer]:
+              - img [ref=e180]
+      - article [ref=e182]:
+        - generic [ref=e184]:
+          - generic [ref=e185]:
+            - generic [ref=e186]: G
+            - generic "https://github.com/x/y/issues/1" [ref=e187]: github.com
+            - generic [ref=e188]: 4 Tem
+          - generic [ref=e189]: Hydration mismatch on settings
+          - generic [ref=e193]: dark mode ile tekrarla
+          - generic [ref=e194]:
+            - generic [ref=e195]:
+              - button "Yellow" [ref=e196] [cursor=pointer]
+              - button "Green" [ref=e197] [cursor=pointer]
+              - button "Blue" [ref=e198] [cursor=pointer]
+              - button "Pink" [ref=e199] [cursor=pointer]
+              - button "Purple" [ref=e200] [cursor=pointer]
+            - link "Open page" [ref=e201] [cursor=pointer]:
+              - /url: https://github.com/x/y/issues/1
+              - img [ref=e202]
+            - button "Edit notes" [ref=e205] [cursor=pointer]:
+              - img [ref=e206]
+            - button "Mark done" [ref=e208] [cursor=pointer]:
+              - img [ref=e209]
+            - button "Delete" [ref=e211] [cursor=pointer]:
+              - img [ref=e212]

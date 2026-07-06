@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="../icons/icon128.png" />
+  <link rel="stylesheet" href="../lib/tokens.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <title>Compy — Dashboard</title>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="brand-mark" src="../icons/icon128.png" width="34" height="34" alt="Compy" />
+        <div>
+          <div class="brand-name">Compy</div>
+          <div class="brand-sub">Local &amp; private</div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span id="statNotes" class="stat-num">0</span><span class="stat-lbl">Notes</span></div>
+        <div class="stat"><span id="statSites" class="stat-num">0</span><span class="stat-lbl">Sites</span></div>
+      </div>
+
+      <nav class="side-nav">
+        <button class="nav-item active" data-site="__all"><span class="nav-ico">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+          <span class="nav-label">All notes</span><span id="allCount" class="nav-count">0</span>
+        </button>
+        <button id="archiveNav" class="nav-item" data-site="__archive" hidden><span class="nav-ico">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg></span>
+          <span class="nav-label">Archive</span><span id="archiveCount" class="nav-count">0</span>
+        </button>
+      </nav>
+
+      <div class="side-section">
+        <div class="side-head">Labels
+          <button id="manageColors" class="side-head-btn" title="Rename labels & add colors" aria-label="Manage labels">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          </button>
+        </div>
+        <div id="colorFilter" class="label-filter"></div>
+      </div>
+
+      <div class="side-section side-sites">
+        <div class="side-head">Sites</div>
+        <div id="siteList" class="site-list"></div>
+      </div>
+
+      <div class="side-foot">
+        <button id="importBtn" class="btn btn-ghost btn-sm side-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+          Import
+        </button>
+        <input id="importFile" type="file" accept=".csv,.txt,.wlnenc" hidden />
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="search" type="search" placeholder="Search notes, quotes, sites…" />
+        </div>
+        <div class="top-actions">
+          <div class="select-wrap">
+            <label class="sort-label" for="sort">Sort</label>
+            <select id="sort" class="select">
+              <option value="updated">Recently edited</option>
+              <option value="created">Newest</option>
+              <option value="site">By site</option>
+            </select>
+          </div>
+          <button id="ctxBtn" class="btn btn-ghost btn-sm" title="Context prepended to AI/Markdown exports">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            AI context
+          </button>
+          <button id="selectBtn" class="btn btn-ghost btn-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Select
+          </button>
+          <div class="menu">
+            <div class="split">
+              <button id="copyAiBtn" class="btn btn-primary btn-sm split-main" title="Copy new & changed tasks for your AI">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m0 12v3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M3 12h3m12 0h3M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1"/></svg>
+                Copy for AI
+              </button>
+              <button id="exportBtn" class="btn btn-primary btn-sm split-caret" aria-label="More export options">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+            </div>
+            <div id="exportMenu" class="menu-pop export-pop" hidden>
+              <div class="ep-head">Copy for AI <span id="aiDeltaHint" class="ep-hint"></span></div>
+              <button class="menu-opt" data-exp="ai"><b>New &amp; changed</b><span>Only what changed since last export (delta)</span></button>
+              <button class="menu-opt" data-exp="ai-all"><b>Everything</b><span>Full task list · new version</span></button>
+              <div class="menu-div"></div>
+              <div class="ep-head">Download</div>
+              <div class="ep-chips">
+                <button class="ep-chip" data-exp="md"><b>.md</b><span>Markdown</span></button>
+                <button class="ep-chip" data-exp="csv"><b>.csv</b><span>Backup</span></button>
+                <button class="ep-chip" data-exp="csvenc"><b>.csv</b><span>🔒 Encrypted</span></button>
+              </div>
+              <div class="menu-div"></div>
+              <button class="menu-opt" data-exp="history"><b>Export history…</b><span id="histHint">Re-copy any version</span></button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Selection action bar -->
+      <div id="selbar" class="selbar" hidden>
+        <label class="selall"><input type="checkbox" id="selAll" /> <span id="selCount">0 selected</span></label>
+        <div class="selbar-actions">
+          <button class="btn btn-ghost btn-sm" data-selexp="ai">Copy for AI</button>
+          <button id="selDone" class="btn btn-primary btn-sm">✓ Mark done</button>
+          <button class="btn btn-ghost btn-sm" data-selexp="md">.md</button>
+          <button id="selDelete" class="btn btn-danger btn-sm">Delete</button>
+          <button id="selCancel" class="btn btn-ghost btn-sm">Cancel</button>
+        </div>
+      </div>
+
+      <section id="content" class="content"></section>
+    </main>
+  </div>
+
+  <!-- Passphrase modal -->
+  <div id="modal" class="modal-scrim" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h3 id="modalTitle">Passphrase</h3>
+      <p id="modalMsg" class="modal-msg"></p>
+      <input id="modalInput" type="password" class="modal-input" placeholder="Enter passphrase" />
+      <div class="modal-actions">
+        <button id="modalCancel" class="btn btn-ghost">Cancel</button>
+        <button id="modalOk" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI context modal -->
+  <div id="ctxModal" class="modal-scrim" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="ctxTitle">
+      <h3 id="ctxTitle">AI context</h3>
+      <p class="modal-msg">This text is added to the top of every <b>Copy for AI</b> / Markdown export, so the reader understands the project. e.g. “This is the AlametOS admin panel by Alameddin Çelik. Fix the UI issues listed below.”</p>
+      <textarea id="ctxInput" class="modal-input" style="height:120px;padding:10px 12px;resize:vertical;" placeholder="Describe the project / instructions for the AI…"></textarea>
+      <div class="modal-actions">
+        <button id="ctxCancel" class="btn btn-ghost">Cancel</button>
+        <button id="ctxSave" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manage colors / labels modal -->
+  <div id="colorsModal" class="modal-scrim" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="colorsTitle" style="max-width:460px;">
+      <h3 id="colorsTitle">Labels &amp; colors</h3>
+      <p class="modal-msg">Each color is a tag. Rename them to fit how you work — urgent, blocked, idea… You can add a few custom colors too. Saved on this device only.</p>
+      <div id="colorsList" class="colors-list"></div>
+      <button id="addColorBtn" class="btn btn-ghost btn-sm" style="margin-top:10px;">＋ Add custom color</button>
+      <div class="modal-actions">
+        <button id="colorsClose" class="btn btn-primary">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export history modal -->
+  <div id="histModal" class="modal-scrim" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="histTitle" style="max-width:520px;">
+      <h3 id="histTitle">Export history</h3>
+      <p class="modal-msg" id="histScope">Past versions for this scope. Re-copy any one — nothing is lost.</p>
+      <div id="histList" class="hist-list"></div>
+      <div class="modal-actions">
+        <button id="histClose" class="btn btn-ghost">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="../lib/store.js"></script>
+  <script src="../lib/crypto.js"></script>
+  <script src="../lib/exporters.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Notes that travel with the web — Fieldbook</title>
+  <link rel="stylesheet" href="../content/content.css" />
+  <style>
+    :root {
+      --ink: #16181d; --muted: #5b6472; --line: #e7e9ef;
+      --accent: #6d28d9; --bg: #ffffff; --soft: #f7f8fb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink); background: var(--bg); line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .topnav {
+      position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,0.85);
+      backdrop-filter: saturate(180%) blur(10px); border-bottom: 1px solid var(--line);
+    }
+    .topnav .row {
+      max-width: 1080px; margin: 0 auto; padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 9px; font-weight: 800; letter-spacing: -0.02em; font-size: 17px; }
+    .logo .badge { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg, #6d28d9, #a855f7); }
+    .nav-links { display: flex; gap: 26px; font-size: 14px; color: var(--muted); }
+    .nav-links a { color: inherit; text-decoration: none; }
+    .nav-links a:hover { color: var(--ink); }
+    .cta { background: var(--accent); color: #fff; padding: 8px 15px; border-radius: 9px; font-size: 14px; font-weight: 600; text-decoration: none; }
+
+    .wrap { max-width: 720px; margin: 0 auto; padding: 56px 24px 96px; }
+    .eyebrow { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+    h1 { font-size: 42px; line-height: 1.15; letter-spacing: -0.025em; margin: 14px 0 18px; }
+    .lede { font-size: 20px; color: var(--muted); margin-bottom: 30px; }
+    .byline { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); margin-bottom: 40px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ec4899); }
+    article h2 { font-size: 25px; letter-spacing: -0.02em; margin: 40px 0 14px; }
+    article p { margin: 16px 0; font-size: 17px; }
+    article ul { margin: 16px 0 16px 22px; }
+    article li { margin: 8px 0; font-size: 17px; }
+    .callout { background: var(--soft); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; margin: 28px 0; }
+    .callout strong { color: var(--accent); }
+    kbd {
+      font-family: ui-monospace, Menlo, monospace; font-size: 13px; padding: 2px 7px;
+      background: var(--soft); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px;
+    }
+    footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; text-align: center; padding: 30px; }
+
+    @media (prefers-color-scheme: dark) {
+      :root { --ink: #eef0f6; --muted: #a6acbd; --line: #2a2e3a; --bg: #14161d; --soft: #1c1f28; }
+      .topnav { background: rgba(20,22,29,0.85); }
+      .cta { color: #fff; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="row">
+      <div class="logo"><span class="badge"></span> Fieldbook</div>
+      <div class="nav-links">
+        <a href="#">Product</a><a href="#">Docs</a><a href="#">Pricing</a><a href="#">Blog</a>
+      </div>
+      <a class="cta" href="#">Get started</a>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <div class="eyebrow">Product · 6 min read</div>
+    <h1>Notes that travel with the web</h1>
+    <p class="lede">Reading and researching online means juggling dozens of tabs. Here is how to capture what matters without losing the context it came from.</p>
+    <div class="byline"><span class="avatar"></span> <div><strong>Alameddin Çelik</strong> · July 6, 2026</div></div>
+
+    <article>
+      <p>Most note-taking tools ask you to leave the page, switch to another app, and paste a link you will never click again. The context evaporates. A week later you have a note that says "fix this" and no idea what "this" was.</p>
+
+      <p>There is a simpler model. Highlight anything on the page and a note travels with it. When you return, the highlight is exactly where you left it, in the color you chose, with your comment one click away.</p>
+
+      <h2>Your data stays yours</h2>
+      <p>Privacy should be the default, not a paid upgrade. Notes stay on your device — nothing is uploaded to a server. There is no account to create and no sync you did not ask for. When you want a backup, you export an encrypted file that only your passphrase can open.</p>
+
+      <div class="callout">
+        <p><strong>Tip:</strong> Every highlight can hold multiple comments, like a thread. Capture the first thought immediately, then add detail as you learn more.</p>
+      </div>
+
+      <h2>Built for handing off to an AI</h2>
+      <p>The best part shows up when the reading is done. Export your notes as a Markdown task list for your AI, drop it into a chat, and let the model work through a page of fixes with full context — the quote, the page, and the element each note points to.</p>
+
+      <p>It works the other way too. When you are the one doing the work, your highlights become a checklist you can walk top to bottom, across every site you touched this week.</p>
+
+      <h2>Fast enough to stay out of your way</h2>
+      <ul>
+        <li>Press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>H</kbd> to highlight the current selection.</li>
+        <li>Press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>N</kbd> to highlight and add a note in one move.</li>
+        <li>Open the dashboard to see everything you saved, grouped by site.</li>
+      </ul>
+
+      <p>Good tools disappear into the task. You should be thinking about the work, not about the tool that captures it. That is the whole idea: highlight, note, move on — and trust that it will all be waiting for you later.</p>
+    </article>
+  </div>
+
+  <footer>© 2026 Fieldbook — a demo page for screenshots.</footer>
+
+  <!-- Compy engine: same scripts a real page gets, loaded manually since
+       content scripts don't auto-inject into extension pages. -->
+  <script src="../lib/store.js"></script>
+  <script src="../content/anchor.js"></script>
+  <script src="../content/highlighter.js"></script>
+  <script src="../content/content.js"></script>
+</body>
+</html>

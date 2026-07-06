@@ -1,0 +1,11 @@
+# build output
+dist/
+*.zip
+
+# os / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# node (if ever added)
+node_modules/

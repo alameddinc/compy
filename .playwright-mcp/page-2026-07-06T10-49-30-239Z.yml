@@ -1,0 +1,72 @@
+- generic [ref=f3e2]:
+  - banner [ref=f3e3]:
+    - generic [ref=f3e4]:
+      - img "Compy" [ref=f3e5]
+      - generic [ref=f3e6]: Compy
+    - generic [ref=f3e7]:
+      - button [ref=f3e8] [cursor=pointer]
+      - button [ref=f3e9] [cursor=pointer]
+  - generic [ref=f3e10]:
+    - generic [ref=f3e11]:
+      - generic [ref=f3e12]: Notes that travel with the web — Fieldbook
+      - generic [ref=f3e13]: hdnnhplijkmmpckahklhcoincbagflah
+    - generic [ref=f3e15]: 5 notes
+  - searchbox "Filter notes on this page…" [ref=f3e17]
+  - main [ref=f3e18]:
+    - generic [ref=f3e19] [cursor=pointer]:
+      - generic [ref=f3e21]:
+        - generic [ref=f3e23]: PAGE NOTE
+        - generic [ref=f3e24]: Ship it.
+        - generic [ref=f3e26]: 30m ago
+      - generic [ref=f3e27]:
+        - button "Edit" [ref=f3e28]:
+          - img [ref=f3e29]
+        - button "Delete" [ref=f3e31]:
+          - img [ref=f3e32]
+    - generic [ref=f3e34] [cursor=pointer]:
+      - generic [ref=f3e36]:
+        - generic [ref=f3e37]: Highlight anything on the page and a note travels with it.
+        - generic [ref=f3e38]: Perfect hero tagline — use this on the landing page.
+        - generic [ref=f3e40]: 2h ago
+      - generic [ref=f3e41]:
+        - button "Edit" [ref=f3e42]:
+          - img [ref=f3e43]
+        - button "Delete" [ref=f3e45]:
+          - img [ref=f3e46]
+    - generic [ref=f3e48] [cursor=pointer]:
+      - generic [ref=f3e50]:
+        - generic [ref=f3e51]: Notes stay on your device — nothing is uploaded to a server.
+        - generic [ref=f3e52]: Lead with privacy.
+        - generic [ref=f3e54]: 5h ago
+      - generic [ref=f3e55]:
+        - button "Edit" [ref=f3e56]:
+          - img [ref=f3e57]
+        - button "Delete" [ref=f3e59]:
+          - img [ref=f3e60]
+    - generic [ref=f3e62] [cursor=pointer]:
+      - generic [ref=f3e64]:
+        - generic [ref=f3e65]: Every highlight can hold multiple comments, like a thread.
+        - generic [ref=f3e66]: Show in screenshot 2.
+        - generic [ref=f3e67]:
+          - generic [ref=f3e68]: "2"
+          - text: animate second note
+        - generic [ref=f3e69]:
+          - generic [ref=f3e70]: 2 notes
+          - generic [ref=f3e71]: 1d ago
+      - generic [ref=f3e72]:
+        - button "Edit" [ref=f3e73]:
+          - img [ref=f3e74]
+        - button "Delete" [ref=f3e76]:
+          - img [ref=f3e77]
+    - generic [ref=f3e79] [cursor=pointer]:
+      - generic [ref=f3e81]:
+        - generic [ref=f3e82]: Export your notes as a Markdown task list for your AI
+        - generic [ref=f3e83]: Killer feature.
+        - generic [ref=f3e85]: 1d ago
+      - generic [ref=f3e86]:
+        - button "Edit" [ref=f3e87]:
+          - img [ref=f3e88]
+        - button "Delete" [ref=f3e90]:
+          - img [ref=f3e91]
+  - contentinfo [ref=f3e93]:
+    - generic [ref=f3e95]: Alt H

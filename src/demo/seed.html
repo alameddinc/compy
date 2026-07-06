@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="../icons/icon128.png" />
+  <link rel="stylesheet" href="../lib/tokens.css" />
+  <title>Compy — Demo data</title>
+  <style>
+    body { min-height: 100dvh; display: grid; place-items: center; padding: 24px; }
+    .card {
+      width: 100%; max-width: 480px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow); padding: 26px;
+    }
+    .head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .head img { width: 34px; height: 34px; }
+    .head h1 { font-size: 18px; letter-spacing: -0.01em; }
+    .sub { color: var(--text-2); font-size: 13.5px; line-height: 1.6; margin-bottom: 20px; }
+    .count { font-weight: 700; color: var(--primary); }
+    .actions { display: grid; gap: 10px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .steps { margin: 20px 0 0; padding: 16px; background: var(--surface-2); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-2); line-height: 1.7; }
+    .steps b { color: var(--text); }
+    #status { margin-top: 14px; font-size: 12.5px; color: var(--text-3); opacity: 0.55; transition: opacity 200ms; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="head">
+      <img src="../icons/icon128.png" alt="Compy" />
+      <h1>Demo data</h1>
+    </div>
+    <p class="sub">Currently stored: <span class="count" id="count">0</span> notes. Load a realistic set for Chrome Web Store screenshots — highlights and page notes on the demo page, plus cross-site notes for the dashboard.</p>
+
+    <div class="actions">
+      <button id="seed" class="btn btn-primary">Load demo data</button>
+      <div class="row2">
+        <button id="openDemo" class="btn">Open demo page ↗</button>
+        <button id="openDash" class="btn">Open dashboard ↗</button>
+      </div>
+      <button id="clear" class="btn btn-danger">Clear everything</button>
+    </div>
+
+    <div class="steps">
+      <b>For screenshots:</b><br />
+      1. Click <b>Load demo data</b>.<br />
+      2. Click <b>Open demo page</b> → highlights appear inline; hover one to see its note.<br />
+      3. Open the Compy popup on that page for the per-page list.<br />
+      4. Click <b>Open dashboard</b> for the all-notes view.
+    </div>
+
+    <div id="status"></div>
+  </div>
+
+  <script src="../lib/store.js"></script>
+  <script src="seed.js"></script>
+</body>
+</html>
