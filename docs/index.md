@@ -2,6 +2,10 @@
 title: "Compy — Privacy Policy"
 ---
 
+<p align="center">
+  <img src="logo.png" alt="Compy" width="96" height="96" />
+</p>
+
 # Compy — Privacy Policy
 
 _Last updated: 2026-07-06_
