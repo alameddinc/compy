@@ -1,0 +1,20 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e3]:
+    - generic [ref=f1e6]: Compy
+    - heading "Highlight the web. Hand it to your AI." [level=1] [ref=f1e7]:
+      - text: Highlight the web.
+      - text: Hand it to your AI.
+    - generic [ref=f1e8]: Capture bugs & ideas as you browse a big app, then copy a versioned Markdown task list for your AI. Local-first & private.
+    - generic [ref=f1e9]:
+      - generic [ref=f1e10]: Colors are tags
+      - generic [ref=f1e11]: Domain versioning
+      - generic [ref=f1e12]: Done → Archive
+  - generic [ref=f1e13]:
+    - generic [ref=f1e14]: app.example.com · Billing
+    - generic [ref=f1e16]:
+      - generic [ref=f1e17]: ₺-5.000,00 / month
+      - generic [ref=f1e18]: Negative amount got accepted — add validation.
+    - generic [ref=f1e19]:
+      - generic [ref=f1e20]: urgent
+      - generic [ref=f1e21]: bug
+    - generic [ref=f1e22]: Copy for AI · v3 · 2 new since v2

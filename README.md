@@ -37,8 +37,9 @@ and it moves to the archive. It's a scratchpad for you and a work queue for your
 - **Keyboard shortcuts**
   - `Alt+Shift+H` — highlight selection
   - `Alt+Shift+N` — highlight + add note
+  - `Alt+Shift+M` — add a page note (no highlight)
   - `Alt+Shift+D` — open dashboard
-  - `Alt+Shift+P` — open popup
+  - open popup — click the toolbar icon (bind a key at chrome://extensions/shortcuts)
   - `/` — focus search (in dashboard)
 
 ## Install (unpacked)

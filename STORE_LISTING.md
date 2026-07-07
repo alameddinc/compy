@@ -50,8 +50,8 @@ PRIVATE BY DEFAULT
 SHORTCUTS
 • Alt+Shift+H — highlight selection
 • Alt+Shift+N — highlight + add note
+• Alt+Shift+M — add a page note (no highlight)
 • Alt+Shift+D — open dashboard
-• Alt+Shift+P — open popup
 ```
 
 ## Single purpose (Privacy tab)
