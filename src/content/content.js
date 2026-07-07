@@ -241,6 +241,7 @@
       colorsRow.style.display = "";
     }
     ta.value = note.note || "";
+    autoGrow(ta);
 
     editor.querySelectorAll(".wln-ed-colors .wln-swatch").forEach((b) =>
       b.classList.toggle("wln-active", b.dataset.color === note.color));
@@ -283,10 +284,18 @@
     editingId = null;
   }
 
+  // Grow the textarea to fit its content so it never scrolls internally
+  // (an internal scroll used to fire scroll events that dismissed the editor).
+  function autoGrow(ta) {
+    ta.style.height = "auto";
+    ta.style.height = Math.min(ta.scrollHeight, 260) + "px";
+  }
+
   function wireEditor() {
     const ta = editor.querySelector(".wln-ed-text");
     ta.addEventListener("input", () => {
       if (!editingId) return;
+      autoGrow(ta);
       clearTimeout(saveTimer);
       const id = editingId, val = ta.value;
       saveTimer = setTimeout(async () => {
@@ -435,6 +444,10 @@
 
   // React to storage edits from popup/dashboard (delete/update elsewhere).
   WLN.onChanged(async () => {
+    // Don't react to storage echoes while the user is actively editing a note
+    // (our own autosave writes fire onChanged; reacting would repaint under the
+    // open editor and can dismiss it).
+    if (editingId) return;
     const fresh = await WLN.getForUrl(location.href);
     const freshIds = new Set(fresh.map((n) => n.id));
     for (const old of state.notes) {
