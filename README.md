@@ -41,11 +41,11 @@ and it moves to the archive. It's a scratchpad for you and a work queue for your
 - **Import** — merges by id (newest wins). Auto-detects plain vs. encrypted files.
 - **Keyboard shortcuts**
   - `Alt+Shift+H` — highlight selection
-  - `Alt+Shift+N` — highlight + add note
+  - `Alt+Shift+M` — add a page note (no highlight)
   - `Alt+Shift+D` — open dashboard
   - `Alt+Shift+S` — screenshot the page & annotate
-  - add a page note — popup ➕ button, right-click menu, or bind a key at chrome://extensions/shortcuts
-  - screenshot is also on the popup 📷 button and the right-click menu
+  - highlight + note — use the **Note** button on the selection toolbar, or bind a key at chrome://extensions/shortcuts
+  - page notes and screenshots are also on the popup and the right-click menu
   - open popup — click the toolbar icon (bind a key at chrome://extensions/shortcuts)
   - `/` — focus search (in dashboard)
 

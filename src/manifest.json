@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Compy — Your memory & your AI's",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Highlight & note anything on the web, then hand your AI a versioned task list. Made for vibecoders shipping fast. Local & private.",
   "permissions": ["storage", "unlimitedStorage", "activeTab", "scripting", "contextMenus"],
   "host_permissions": ["<all_urls>"],
@@ -46,15 +46,15 @@
       "description": "Highlight current selection"
     },
     "highlight-with-note": {
-      "suggested_key": { "default": "Alt+Shift+N", "mac": "Alt+Shift+N" },
-      "description": "Highlight selection and add a note"
+      "description": "Highlight selection and add a note — from the selection toolbar's Note button, or bind a key"
     },
     "open-dashboard": {
       "suggested_key": { "default": "Alt+Shift+D", "mac": "Alt+Shift+D" },
       "description": "Open the notes dashboard"
     },
     "add-page-note": {
-      "description": "Add a page note (no highlight) — from the popup ➕, right-click menu, or bind a key"
+      "suggested_key": { "default": "Alt+Shift+M", "mac": "Alt+Shift+M" },
+      "description": "Add a page note (no highlight)"
     },
     "capture-screenshot": {
       "suggested_key": { "default": "Alt+Shift+S", "mac": "Alt+Shift+S" },
