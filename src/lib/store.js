@@ -13,16 +13,19 @@
   // add custom colors locally (see loadColors). COLORS is mutated in place at
   // load so every `WLN.COLORS[key]` lookup (content, popup, dashboard) sees the
   // merged set without any refactor.
+  // Purpose-driven default labels (colors ARE tags). Users can rename any of
+  // them locally; these are just the first-run defaults that also ride into
+  // exports as #idea / #bug / #forai etc.
   const BASE = {
-    yellow: { label: "Yellow", hl: "#fde68a", ink: "#78350f", dot: "#f59e0b" },
-    orange: { label: "Orange", hl: "#fed7aa", ink: "#7c2d12", dot: "#f97316" },
-    red:    { label: "Red",    hl: "#fecaca", ink: "#7f1d1d", dot: "#ef4444" },
-    green:  { label: "Green",  hl: "#bbf7d0", ink: "#14532d", dot: "#22c55e" },
-    teal:   { label: "Teal",   hl: "#99f6e4", ink: "#134e4a", dot: "#14b8a6" },
-    blue:   { label: "Blue",   hl: "#bfdbfe", ink: "#1e3a8a", dot: "#3b82f6" },
-    purple: { label: "Purple", hl: "#e9d5ff", ink: "#581c87", dot: "#a855f7" },
-    pink:   { label: "Pink",   hl: "#fbcfe8", ink: "#831843", dot: "#ec4899" },
-    gray:   { label: "Gray",   hl: "#e5e7eb", ink: "#374151", dot: "#6b7280" }
+    yellow: { label: "Idea",       hl: "#fde68a", ink: "#78350f", dot: "#f59e0b" },
+    orange: { label: "Review",     hl: "#fed7aa", ink: "#7c2d12", dot: "#f97316" },
+    red:    { label: "Bug",        hl: "#fecaca", ink: "#7f1d1d", dot: "#ef4444" },
+    green:  { label: "Done",       hl: "#bbf7d0", ink: "#14532d", dot: "#22c55e" },
+    teal:   { label: "Question",   hl: "#99f6e4", ink: "#134e4a", dot: "#14b8a6" },
+    blue:   { label: "Read later", hl: "#bfdbfe", ink: "#1e3a8a", dot: "#3b82f6" },
+    purple: { label: "For AI",     hl: "#e9d5ff", ink: "#581c87", dot: "#a855f7" },
+    pink:   { label: "Important",  hl: "#fbcfe8", ink: "#831843", dot: "#ec4899" },
+    gray:   { label: "Note",       hl: "#e5e7eb", ink: "#374151", dot: "#6b7280" }
   };
   const BUILTIN_KEYS = Object.keys(BASE);
   const MAX_CUSTOM = 4;

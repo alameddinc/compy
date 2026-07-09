@@ -102,7 +102,7 @@
     toolbar.style.display = "none";
     const colors = Object.keys(WLN.COLORS).map((key) => {
       const c = WLN.COLORS[key];
-      return `<button class="wln-swatch" data-color="${key}" title="${c.label}" style="--sw:${c.dot}"></button>`;
+      return `<button class="wln-swatch" data-color="${key}" aria-label="${c.label}" style="--sw:${c.dot}"></button>`;
     }).join("");
     toolbar.innerHTML = `
       <div class="wln-swatches">${colors}</div>
@@ -120,6 +120,7 @@
       if (sw) createFromSelection(sw.dataset.color, false);
       else if (nb) createFromSelection(WLN.DEFAULT_COLOR, true);
     });
+    wireSwatchTips(toolbar.querySelector(".wln-swatches"));
   }
 
   function showToolbar(rect) {
@@ -136,6 +137,40 @@
 
   function hideToolbar() {
     if (toolbar) toolbar.style.display = "none";
+    hideSwTip();
+  }
+
+  /* Hover label chip for color swatches — an instant, styled tooltip that
+     replaces the slow native `title` (shows the tag name + a color dot). */
+  let swTip = null;
+  function ensureSwTip() {
+    if (swTip) return swTip;
+    swTip = document.createElement("div");
+    swTip.setAttribute("data-wln-ui", "");
+    swTip.className = "wln-swtip";
+    swTip.style.display = "none";
+    document.body.appendChild(swTip);
+    return swTip;
+  }
+  function showSwTip(sw) {
+    const c = WLN.COLORS[sw.dataset.color];
+    if (!c) return;
+    const t = ensureSwTip();
+    t.textContent = c.label;
+    t.style.setProperty("--dot", c.dot);
+    t.style.display = "inline-flex";
+    const r = sw.getBoundingClientRect();
+    const tw = t.offsetWidth, th = t.offsetHeight;
+    let left = window.scrollX + r.left + r.width / 2 - tw / 2;
+    left = Math.max(window.scrollX + 4, left);
+    t.style.left = Math.round(left) + "px";
+    t.style.top = Math.round(window.scrollY + r.top - th - 10) + "px";
+  }
+  function hideSwTip() { if (swTip) swTip.style.display = "none"; }
+  function wireSwatchTips(container) {
+    container.addEventListener("mouseover", (e) => { const sw = e.target.closest(".wln-swatch"); if (sw) showSwTip(sw); });
+    container.addEventListener("mouseout", (e) => { const sw = e.target.closest(".wln-swatch"); if (sw) hideSwTip(); });
+    container.addEventListener("click", hideSwTip);
   }
 
   function currentSelectionRange() {
@@ -242,8 +277,9 @@
     const colors = editor.querySelector(".wln-ed-colors");
     colors.innerHTML = Object.keys(WLN.COLORS).map((key) => {
       const c = WLN.COLORS[key];
-      return `<button class="wln-swatch" data-color="${key}" title="${c.label}" style="--sw:${c.dot}"></button>`;
+      return `<button class="wln-swatch" data-color="${key}" aria-label="${c.label}" style="--sw:${c.dot}"></button>`;
     }).join("");
+    wireSwatchTips(colors);
   }
 
   let editingId = null;
