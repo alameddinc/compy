@@ -111,20 +111,31 @@
       b.classList.toggle("active", v === state.view && (v !== "active" || state.site === "__all"));
     });
 
-    // colors-as-labels present in this view (each color is a tag)
-    const colorCounts = {};
-    for (const n of pool) colorCounts[n.color] = (colorCounts[n.color] || 0) + 1;
-    $("#colorFilter").innerHTML = Object.keys(WLN.COLORS)
-      .filter((k) => colorCounts[k])
-      .map((k) => `<button class="label-item ${state.color === k ? "on" : ""}" data-color="${k}">
-        <span class="li-dot" style="background:${WLN.COLORS[k].dot}"></span>
-        <span class="li-name">${esc(WLN.COLORS[k].label)}</span>
-        <span class="li-count">${colorCounts[k]}</span></button>`).join("")
-      || `<span style="font-size:11px;color:var(--text-3);padding:2px 4px;">No labels in view</span>`;
+    const shotsView = state.view === "shots";
+    // Labels don't apply to screenshots — hide that section in the gallery view.
+    const labelSection = $("#colorFilter").closest(".side-section");
+    if (labelSection) labelSection.hidden = shotsView;
 
-    // sites present in this view
+    // colors-as-labels present in this view (each color is a tag)
+    if (!shotsView) {
+      const colorCounts = {};
+      for (const n of pool) colorCounts[n.color] = (colorCounts[n.color] || 0) + 1;
+      $("#colorFilter").innerHTML = Object.keys(WLN.COLORS)
+        .filter((k) => colorCounts[k])
+        .map((k) => `<button class="label-item ${state.color === k ? "on" : ""}" data-color="${k}">
+          <span class="li-dot" style="background:${WLN.COLORS[k].dot}"></span>
+          <span class="li-name">${esc(WLN.COLORS[k].label)}</span>
+          <span class="li-count">${colorCounts[k]}</span></button>`).join("")
+        || `<span style="font-size:11px;color:var(--text-3);padding:2px 4px;">No labels in view</span>`;
+    }
+
+    // sites present in this view (notes, or screenshot origins in gallery view)
     const sites = new Map();
-    for (const n of pool) { const key = n.origin || hostOf(n.url); sites.set(key, (sites.get(key) || 0) + 1); }
+    if (shotsView) {
+      for (const s of shots) { const key = s.origin || hostOf(s.url); sites.set(key, (sites.get(key) || 0) + 1); }
+    } else {
+      for (const n of pool) { const key = n.origin || hostOf(n.url); sites.set(key, (sites.get(key) || 0) + 1); }
+    }
     const sorted = [...sites.entries()].sort((a, b) => b[1] - a[1]);
     $("#siteList").innerHTML = sorted.map(([origin, count]) => {
       const host = hostOf(origin);
@@ -555,11 +566,15 @@
   async function renderShots(root) {
     if (!shots.length) return root.innerHTML = emptyShots();
     root.classList.remove("selmode");
+    const list = state.site === "__all"
+      ? shots
+      : shots.filter((s) => (s.origin || WLN.originOf(s.url)) === state.site);
+    if (!list.length) return root.innerHTML = `<div class="empty-big"><h2>No screenshots here</h2><p>No saved screenshots for this site. Pick a different site or clear the filter.</p></div>`;
     root.innerHTML = `<div class="archive-banner"><span>Saved screenshots — a private gallery on your device, kept out of AI exports.</span></div>
       <div class="shot-grid" id="shotGrid"></div>`;
     const grid = root.querySelector("#shotGrid");
     // Image blobs live in their own keys; load them lazily after the frame.
-    const cards = await Promise.all(shots.map(async (s) => shotCard(s, await WLN.getShotData(s.id))));
+    const cards = await Promise.all(list.map(async (s) => shotCard(s, await WLN.getShotData(s.id))));
     if (state.view !== "shots") return; // view switched while loading
     grid.innerHTML = cards.join("");
     wireShots(grid);
