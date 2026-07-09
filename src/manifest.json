@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Compy — Your memory & your AI's",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Highlight & note anything on the web, then hand your AI a versioned task list. Made for vibecoders shipping fast. Local & private.",
   "permissions": ["storage", "activeTab", "scripting", "contextMenus"],
   "host_permissions": ["<all_urls>"],
@@ -32,6 +32,7 @@
         "lib/store.js",
         "content/anchor.js",
         "content/highlighter.js",
+        "content/annotate.js",
         "content/content.js"
       ],
       "css": ["content/content.css"],
@@ -55,6 +56,9 @@
     "add-page-note": {
       "suggested_key": { "default": "Alt+Shift+M", "mac": "Alt+Shift+M" },
       "description": "Add a page note (no highlight)"
+    },
+    "capture-screenshot": {
+      "description": "Screenshot the page & annotate it"
     },
     "_execute_action": {
       "description": "Open the Compy popup (or click the toolbar icon)"

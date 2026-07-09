@@ -2,7 +2,7 @@
    Commands, context menus, per-tab badge. */
 
 const DASHBOARD_URL = chrome.runtime.getURL("dashboard/dashboard.html");
-const CONTENT_FILES = ["lib/store.js", "content/anchor.js", "content/highlighter.js", "content/content.js"];
+const CONTENT_FILES = ["lib/store.js", "content/anchor.js", "content/highlighter.js", "content/annotate.js", "content/content.js"];
 
 function openDashboard() {
   chrome.tabs.create({ url: DASHBOARD_URL });
@@ -15,6 +15,21 @@ async function activeTab() {
 
 function sendToTab(tabId, msg) {
   return chrome.tabs.sendMessage(tabId, msg).catch(() => {});
+}
+
+// Capture the visible area of `tab` and hand the PNG to its content script's
+// annotator. Content hides its own floating UI first (WLN_PRE_CAPTURE) so the
+// toolbar/editor don't end up in the shot.
+async function captureAndAnnotate(tab) {
+  if (!tab || !tab.id || !/^https?:/.test(tab.url || "")) return;
+  await ensureInjected(tab.id, tab.url);
+  await sendToTab(tab.id, { type: "WLN_PRE_CAPTURE" });
+  try {
+    const dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
+    if (dataUrl) sendToTab(tab.id, { type: "WLN_ANNOTATE", dataUrl });
+  } catch (e) {
+    /* captureVisibleTab throws on chrome:// pages, the store, etc. — ignore. */
+  }
 }
 
 // Inject the content script on demand (fixes tabs opened before install /
@@ -38,6 +53,7 @@ chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({ id: "wln-highlight", title: "Highlight selection", contexts: ["selection"] });
     chrome.contextMenus.create({ id: "wln-highlight-note", title: "Highlight + add note", contexts: ["selection"] });
     chrome.contextMenus.create({ id: "wln-page-note", title: "Add a page note (no highlight)", contexts: ["page", "all"] });
+    chrome.contextMenus.create({ id: "wln-screenshot", title: "Screenshot & annotate", contexts: ["page", "all"] });
     chrome.contextMenus.create({ id: "wln-sep", type: "separator", contexts: ["all"] });
     chrome.contextMenus.create({ id: "wln-dashboard", title: "Open Compy dashboard", contexts: ["all"] });
   });
@@ -49,6 +65,7 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "wln-dashboard") return openDashboard();
   if (!tab || !tab.id) return;
+  if (info.menuItemId === "wln-screenshot") return captureAndAnnotate(tab);
   await ensureInjected(tab.id, tab.url);
   if (info.menuItemId === "wln-highlight") sendToTab(tab.id, { type: "WLN_HIGHLIGHT", withNote: false });
   if (info.menuItemId === "wln-highlight-note") sendToTab(tab.id, { type: "WLN_HIGHLIGHT", withNote: true });
@@ -60,6 +77,7 @@ chrome.commands.onCommand.addListener(async (command) => {
   if (command === "open-dashboard") return openDashboard();
   const tab = await activeTab();
   if (!tab || !tab.id) return;
+  if (command === "capture-screenshot") return captureAndAnnotate(tab);
   await ensureInjected(tab.id, tab.url);
   if (command === "highlight-selection") sendToTab(tab.id, { type: "WLN_HIGHLIGHT", withNote: false });
   if (command === "highlight-with-note") sendToTab(tab.id, { type: "WLN_HIGHLIGHT", withNote: true });
@@ -83,6 +101,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
   }
   if (msg.type === "WLN_OPEN_DASHBOARD") openDashboard();
+  if (msg.type === "WLN_SCREENSHOT") {
+    (async () => { await captureAndAnnotate(await activeTab()); sendResponse({ ok: true }); })();
+    return true; // async response
+  }
   if (msg.type === "WLN_ENSURE") {
     ensureInjected(msg.tabId, msg.url).then((ok) => sendResponse({ ok }));
     return true; // async response

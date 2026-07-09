@@ -439,6 +439,20 @@
         loadForCurrentUrl().then(() => sendResponse({ ok: true }));
         return true;
       }
+      case "WLN_PRE_CAPTURE": {
+        // Hide our own floating UI so it isn't captured, then reply once the
+        // browser has painted the cleared frame (double rAF).
+        hideToolbar();
+        closeEditor();
+        if (window.WLNAnnotate) WLNAnnotate.close();
+        requestAnimationFrame(() => requestAnimationFrame(() => sendResponse({ ok: true })));
+        return true;
+      }
+      case "WLN_ANNOTATE": {
+        if (window.WLNAnnotate) WLNAnnotate.open(msg.dataUrl);
+        sendResponse({ ok: true });
+        return true;
+      }
     }
   });
 

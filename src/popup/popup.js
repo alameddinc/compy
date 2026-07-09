@@ -313,6 +313,12 @@
     const el = listEl.querySelector(`.card[data-id="${rec.id}"]`);
     if (el) toggleInline({ ...rec, orphaned: false }, el, true);
   });
+  $("#shot").addEventListener("click", () => {
+    // Background captures the visible tab then opens the annotator on the page.
+    // Popup must close so it isn't the focused surface when the overlay appears.
+    chrome.runtime.sendMessage({ type: "WLN_SCREENSHOT" });
+    window.close();
+  });
   $("#search").addEventListener("input", (e) => { filter = e.target.value; render(); });
 
   let toastTimer = null;

@@ -26,6 +26,8 @@ and it moves to the archive. It's a scratchpad for you and a work queue for your
   built-ins and add your own custom colors, all stored locally. Labels ride along in exports (`#urgent`).
 - **Done → Archive** — mark a note (or a whole selection) done; it leaves the board, the page,
   and future exports, and lands in the Archive (with its own site/label filters). Restore anytime.
+- **Screenshot & annotate** — capture the visible page, draw boxes / arrows / text on it, then
+  download the PNG (or copy it to the clipboard). Great for handing a visual bug to your AI.
 - **Export**
   - **Copy for AI** — a Markdown task list (note + quoted highlight + URL + `#label`), grouped by site.
   - **Domain-based versioning** — each site tracks its own version. "New & changed" sends only the
@@ -39,6 +41,7 @@ and it moves to the archive. It's a scratchpad for you and a work queue for your
   - `Alt+Shift+N` — highlight + add note
   - `Alt+Shift+M` — add a page note (no highlight)
   - `Alt+Shift+D` — open dashboard
+  - Screenshot & annotate — from the popup 📷 button, right-click menu, or bind a key at chrome://extensions/shortcuts
   - open popup — click the toolbar icon (bind a key at chrome://extensions/shortcuts)
   - `/` — focus search (in dashboard)
 
