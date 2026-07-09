@@ -27,7 +27,10 @@ and it moves to the archive. It's a scratchpad for you and a work queue for your
 - **Done → Archive** — mark a note (or a whole selection) done; it leaves the board, the page,
   and future exports, and lands in the Archive (with its own site/label filters). Restore anytime.
 - **Screenshot & annotate** — capture the visible page, draw boxes / arrows / text on it, then
-  download the PNG (or copy it to the clipboard). Great for handing a visual bug to your AI.
+  download the PNG, copy it to the clipboard, or **Save** it to Compy. Great for handing a
+  visual bug to your AI.
+- **Screenshots gallery** — saved shots land in a private, on-device gallery (dashboard →
+  Screenshots) you can browse, re-download, or delete. Never included in AI exports.
 - **Export**
   - **Copy for AI** — a Markdown task list (note + quoted highlight + URL + `#label`), grouped by site.
   - **Domain-based versioning** — each site tracks its own version. "New & changed" sends only the

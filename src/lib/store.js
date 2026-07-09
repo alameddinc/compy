@@ -6,6 +6,8 @@
   const NOTES_KEY = "wln_notes";
   const SETTINGS_KEY = "wln_settings";
   const EXPORTS_KEY = "wln_exports";
+  const SHOTS_KEY = "wln_shots";       // lightweight index (metadata only)
+  const SHOT_DATA_PREFIX = "shot_";     // one key per image: shot_<id> -> dataURL
 
   // Built-in colors. `label` is the DEFAULT tag name; users can rename it and
   // add custom colors locally (see loadColors). COLORS is mutated in place at
@@ -74,6 +76,9 @@
   }
   function set(obj) {
     return new Promise((resolve) => chrome.storage.local.set(obj, resolve));
+  }
+  function del(keys) {
+    return new Promise((resolve) => chrome.storage.local.remove(keys, resolve));
   }
 
   const Store = {
@@ -343,11 +348,47 @@
       return c;
     },
 
+    /* ---------- saved screenshots (local gallery, never exported) ----------
+       Images can be large, so each PNG lives under its own key (shot_<id>) and
+       the index (SHOTS_KEY) holds only metadata — listing the gallery never
+       deserializes the image blobs. */
+    SHOTS_KEY,
+    async getShots() {
+      const idx = await get(SHOTS_KEY, []);
+      return idx.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    },
+    async getShotData(id) {
+      return await get(SHOT_DATA_PREFIX + id, null);
+    },
+    async addShot({ dataUrl, url, title, w, h }) {
+      const id = uid();
+      await set({ [SHOT_DATA_PREFIX + id]: dataUrl });
+      const meta = {
+        id, url: url || "", urlKey: url ? urlKey(url) : "", origin: originOf(url || ""),
+        title: title || "", w: w || 0, h: h || 0, createdAt: Date.now()
+      };
+      const idx = await get(SHOTS_KEY, []);
+      idx.push(meta);
+      await set({ [SHOTS_KEY]: idx });
+      return meta;
+    },
+    async removeShot(id) {
+      const idx = await get(SHOTS_KEY, []);
+      await set({ [SHOTS_KEY]: idx.filter((s) => s.id !== id) });
+      await del(SHOT_DATA_PREFIX + id);
+    },
+
     onChanged(cb) {
       chrome.storage.onChanged.addListener((changes, area) => {
         if (area === "local" && changes[NOTES_KEY]) {
           cb(changes[NOTES_KEY].newValue || []);
         }
+      });
+    },
+    // Notify when the saved-screenshots index changes (dashboard live refresh).
+    onShotsChanged(cb) {
+      chrome.storage.onChanged.addListener((changes, area) => {
+        if (area === "local" && changes[SHOTS_KEY]) cb(changes[SHOTS_KEY].newValue || []);
       });
     }
   };

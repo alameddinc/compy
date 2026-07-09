@@ -189,6 +189,18 @@
 .kchip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-2); background: var(--surface); border: 1px solid var(--border); padding: 6px 10px; border-radius: 8px; }
 kbd { font-family: var(--mono); font-size: 10.5px; padding: 2px 5px; background: var(--surface-2); border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 5px; color: var(--text-2); }
 
+/* screenshots gallery */
+.shot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.shot-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); }
+.shot-thumb { display: block; background: repeating-conic-gradient(var(--surface-2) 0% 25%, transparent 0% 50%) 50% / 18px 18px; line-height: 0; border-bottom: 1px solid var(--border); }
+.shot-thumb img { width: 100%; height: 150px; object-fit: cover; object-position: top; display: block; transition: opacity 120ms ease; }
+.shot-card:hover .shot-thumb img { opacity: 0.92; }
+.shot-cap { padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.shot-title { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--text); }
+.shot-title span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shot-sub { font-size: 11.5px; color: var(--text-3); }
+.shot-acts { display: flex; gap: 6px; margin-top: 6px; }
+
 /* modal */
 .modal-scrim { position: fixed; inset: 0; z-index: 100; background: rgba(10, 12, 20, 0.55); display: grid; place-items: center; padding: 20px; }
 .modal-scrim[hidden] { display: none; } /* [hidden] alone is overridden by display:grid above */

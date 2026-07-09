@@ -141,6 +141,7 @@
     Object.assign(dl.style, { background: "#6d28d9", color: "#fff", border: "1px solid #6d28d9" });
     bar.appendChild(dl);
     bar.appendChild(mkBtn(icon('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>') + '<span style="margin-left:5px">Copy</span>', copy));
+    bar.appendChild(mkBtn(icon('<path d="M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>') + '<span style="margin-left:5px">Save</span>', save));
     bar.appendChild(sep());
     bar.appendChild(mkBtn(icon('<path d="M6 6l12 12M18 6 6 18"/>'), close));
 
@@ -307,6 +308,19 @@
       flash("Copied ✓");
     } catch (e) {
       flash("Copy blocked — use Download");
+    }
+  }
+
+  // Persist the annotated shot into Compy's local gallery (dashboard → Screenshots).
+  // Not part of AI exports — a private archive on the device.
+  async function save() {
+    const W = window.WLN;
+    if (!W || !W.addShot) return flash("Save unavailable");
+    try {
+      await W.addShot({ dataUrl: canvas.toDataURL("image/png"), url: location.href, title: document.title, w: canvas.width, h: canvas.height });
+      flash("Saved to Compy ✓");
+    } catch (e) {
+      flash("Save failed — storage full?");
     }
   }
 

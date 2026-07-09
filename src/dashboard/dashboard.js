@@ -6,6 +6,7 @@
   const $$ = (s) => [...document.querySelectorAll(s)];
 
   let all = [];
+  let shots = [];
   let exportContext = "";
   const state = { view: "active", site: "__all", color: null, q: "", sort: "updated", selectMode: false, selected: new Set() };
 
@@ -42,6 +43,7 @@
   async function load() {
     await WLN.loadColors();
     all = await WLN.getAll();
+    shots = await WLN.getShots();
     exportContext = (await WLN.getSettings()).exportContext || "";
     renderAll();
   }
@@ -98,9 +100,15 @@
       archNav.hidden = archivedCount === 0;
       $("#archiveCount").textContent = archivedCount;
     }
+    const shotsNav = $("#shotsNav");
+    if (shotsNav) {
+      shotsNav.hidden = shots.length === 0;
+      $("#shotsCount").textContent = shots.length;
+    }
+    const viewOf = (b) => b.dataset.site === "__archive" ? "archive" : b.dataset.site === "__shots" ? "shots" : "active";
     $$(".nav-item").forEach((b) => {
-      const isView = (b.dataset.site === "__archive") ? state.view === "archive" : state.view === "active";
-      b.classList.toggle("active", isView && state.site === "__all");
+      const v = viewOf(b);
+      b.classList.toggle("active", v === state.view && (v !== "active" || state.site === "__all"));
     });
 
     // colors-as-labels present in this view (each color is a tag)
@@ -127,8 +135,9 @@
 
   /* ---------- content ---------- */
   function renderContent() {
-    const notes = filtered();
     const root = $("#content");
+    if (state.view === "shots") return renderShots(root);
+    const notes = filtered();
     if (!all.length) return root.innerHTML = emptyAll();
 
     const archiveView = state.view === "archive";
@@ -540,6 +549,67 @@
     return `<div class="empty-big"><h2>Nothing here</h2><p>No notes match your current filters. Try clearing the search or picking a different site.</p></div>`;
   }
 
+  /* ---------- screenshots gallery ---------- */
+  const ICON_DL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>';
+
+  async function renderShots(root) {
+    if (!shots.length) return root.innerHTML = emptyShots();
+    root.classList.remove("selmode");
+    root.innerHTML = `<div class="archive-banner"><span>Saved screenshots — a private gallery on your device, kept out of AI exports.</span></div>
+      <div class="shot-grid" id="shotGrid"></div>`;
+    const grid = root.querySelector("#shotGrid");
+    // Image blobs live in their own keys; load them lazily after the frame.
+    const cards = await Promise.all(shots.map(async (s) => shotCard(s, await WLN.getShotData(s.id))));
+    if (state.view !== "shots") return; // view switched while loading
+    grid.innerHTML = cards.join("");
+    wireShots(grid);
+  }
+
+  function shotCard(s, dataUrl) {
+    const host = hostOf(s.url || s.origin || "");
+    const title = s.title || host;
+    const src = dataUrl || "";
+    return `<figure class="shot-card" data-id="${s.id}">
+      <a class="shot-thumb" href="${src}" target="_blank" rel="noopener" title="Open full size">
+        <img src="${src}" alt="${esc(title)}" loading="lazy" />
+      </a>
+      <figcaption class="shot-cap">
+        <div class="shot-title">${avatar(host, 16)}<span>${esc(title)}</span></div>
+        <div class="shot-sub">${esc(host)} · ${fmtDate(s.createdAt)}</div>
+        <div class="shot-acts">
+          <button class="act" data-shot-act="download" title="Download PNG">${ICON_DL}</button>
+          <button class="act" data-shot-act="delete" title="Delete">${ICON.trash}</button>
+        </div>
+      </figcaption>
+    </figure>`;
+  }
+
+  function wireShots(grid) {
+    grid.addEventListener("click", async (e) => {
+      const btn = e.target.closest("[data-shot-act]"); if (!btn) return;
+      e.preventDefault();
+      const card = btn.closest(".shot-card"); const id = card.dataset.id;
+      if (btn.dataset.shotAct === "download") {
+        const src = card.querySelector("img").getAttribute("src");
+        const a = document.createElement("a");
+        a.href = src; a.download = `compy-${id.slice(0, 8)}.png`;
+        document.body.appendChild(a); a.click(); a.remove();
+      } else if (btn.dataset.shotAct === "delete") {
+        await WLN.removeShot(id);
+        shots = shots.filter((s) => s.id !== id);
+        renderAll(); toast("Screenshot deleted");
+      }
+    });
+  }
+
+  function emptyShots() {
+    return `<div class="empty-big">
+      <div class="eb-ico"><svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h1.2a2 2 0 0 0 1.7-1l.6-1a2 2 0 0 1 1.7-1h3.6a2 2 0 0 1 1.7 1l.6 1a2 2 0 0 0 1.7 1H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/></svg></div>
+      <h2>No screenshots yet</h2>
+      <p>Press <kbd>Alt</kbd>+<kbd>⇧</kbd>+<kbd>S</kbd> on any page (or the popup 📷), annotate, then <b>Save</b>. Saved shots land here — private, never exported.</p>
+    </div>`;
+  }
+
   /* ---------- render ---------- */
   function renderAll() { renderSidebar(); renderContent(); updateSelbar(); }
 
@@ -550,8 +620,9 @@
 
     document.querySelector(".side-nav").addEventListener("click", (e) => {
       const item = e.target.closest(".nav-item"); if (!item) return;
-      // Switching view (active/archive) resets the in-view filters.
-      state.view = item.dataset.site === "__archive" ? "archive" : "active";
+      // Switching view resets the in-view filters.
+      state.view = item.dataset.site === "__archive" ? "archive"
+        : item.dataset.site === "__shots" ? "shots" : "active";
       state.site = "__all"; state.color = null;
       renderAll();
     });
@@ -662,6 +733,12 @@
     });
 
     WLN.onChanged((notes) => { all = notes; renderAll(); });
+    // Live-refresh the gallery when a shot is saved/deleted from any context.
+    WLN.onShotsChanged(async () => {
+      shots = await WLN.getShots();
+      renderSidebar();
+      if (state.view === "shots") renderContent();
+    });
   }
 
   bind();
