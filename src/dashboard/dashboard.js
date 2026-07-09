@@ -570,9 +570,9 @@
     const title = s.title || host;
     const src = dataUrl || "";
     return `<figure class="shot-card" data-id="${s.id}">
-      <a class="shot-thumb" href="${src}" target="_blank" rel="noopener" title="Open full size">
+      <button class="shot-thumb" data-shot-act="view" title="View full size">
         <img src="${src}" alt="${esc(title)}" loading="lazy" />
-      </a>
+      </button>
       <figcaption class="shot-cap">
         <div class="shot-title">${avatar(host, 16)}<span>${esc(title)}</span></div>
         <div class="shot-sub">${esc(host)} · ${fmtDate(s.createdAt)}</div>
@@ -584,11 +584,26 @@
     </figure>`;
   }
 
+  function openLightbox(src) {
+    const box = document.createElement("div");
+    box.className = "shot-lightbox";
+    box.innerHTML = `<img src="${src}" alt="" /><button class="lb-close" aria-label="Close">✕</button>`;
+    const close = () => { box.remove(); document.removeEventListener("keydown", onEsc, true); };
+    const onEsc = (e) => { if (e.key === "Escape") close(); };
+    box.addEventListener("click", close);
+    document.addEventListener("keydown", onEsc, true);
+    document.body.appendChild(box);
+  }
+
   function wireShots(grid) {
     grid.addEventListener("click", async (e) => {
       const btn = e.target.closest("[data-shot-act]"); if (!btn) return;
       e.preventDefault();
       const card = btn.closest(".shot-card"); const id = card.dataset.id;
+      if (btn.dataset.shotAct === "view") {
+        openLightbox(card.querySelector("img").getAttribute("src"));
+        return;
+      }
       if (btn.dataset.shotAct === "download") {
         const src = card.querySelector("img").getAttribute("src");
         const a = document.createElement("a");
