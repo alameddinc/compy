@@ -58,12 +58,37 @@
     return n;
   }
 
+  // True while this content script's extension context is still valid. After
+  // the extension is reloaded/updated, stale scripts left in open tabs lose
+  // `chrome.runtime` — touching it throws "Extension context invalidated".
+  function alive() {
+    try { return !!(chrome.runtime && chrome.runtime.id); } catch { return false; }
+  }
+
+  let dead = false;
+  function cleanup() {
+    if (dead) return;
+    dead = true;
+    try { observer.disconnect(); } catch {}
+    document.removeEventListener("mouseup", onDocMouseUp, true);
+    document.removeEventListener("click", onDocClick, true);
+    document.removeEventListener("scroll", onDocScroll, true);
+    window.removeEventListener("resize", hideToolbar);
+    clearTimeout(moTimer); clearTimeout(saveTimer);
+    hideToolbar(); closeEditor();
+  }
+
   function updateBadge() {
-    chrome.runtime.sendMessage({
-      type: "WLN_BADGE",
-      total: state.notes.filter((n) => !n.archivedAt).length,
-      orphans: orphanCount()
-    }).catch(() => {});
+    if (!alive()) return cleanup();
+    try {
+      chrome.runtime.sendMessage({
+        type: "WLN_BADGE",
+        total: state.notes.filter((n) => !n.archivedAt).length,
+        orphans: orphanCount()
+      }).catch(() => {});
+    } catch (e) {
+      cleanup(); // context invalidated mid-call — go quiet
+    }
   }
 
   /* ---------- selection toolbar ---------- */
@@ -162,6 +187,7 @@
   }
 
   async function createFromSelection(color, openEditor) {
+    if (!alive()) return cleanup();
     const range = currentSelectionRange();
     if (!range) return;
     const clone = range.cloneRange();
@@ -261,6 +287,7 @@
   }
 
   async function createPageNote() {
+    if (!alive()) return cleanup();
     const note = await WLN.addPageNote(location.href, pageTitle(), "");
     state.notes.push(note);
     updateBadge();
@@ -299,6 +326,7 @@
       clearTimeout(saveTimer);
       const id = editingId, val = ta.value;
       saveTimer = setTimeout(async () => {
+        if (!alive()) return cleanup();
         await WLN.setPrimaryComment(id, val);
         const n = noteById(id); if (n) n.note = val;
         WLNHighlight.setHasNote(id, !!val.trim());
@@ -374,7 +402,7 @@
 
   let moTimer = null;
   const observer = new MutationObserver(() => {
-    if (state.suppress) return;
+    if (dead || state.suppress) return;
     clearTimeout(moTimer);
     moTimer = setTimeout(() => {
       // Detect removed highlights (dynamic pages) -> orphan; retry unpainted.
