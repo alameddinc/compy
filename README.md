@@ -40,8 +40,9 @@ and it moves to the archive. It's a scratchpad for you and a work queue for your
   - `Alt+Shift+H` — highlight selection
   - `Alt+Shift+N` — highlight + add note
   - `Alt+Shift+M` — add a page note (no highlight)
-  - `Alt+Shift+D` — open dashboard
-  - Screenshot & annotate — from the popup 📷 button, right-click menu, or bind a key at chrome://extensions/shortcuts
+  - `Alt+Shift+S` — screenshot the page & annotate
+  - open dashboard — popup grid button, right-click menu, or bind a key at chrome://extensions/shortcuts
+  - screenshot is also on the popup 📷 button and the right-click menu
   - open popup — click the toolbar icon (bind a key at chrome://extensions/shortcuts)
   - `/` — focus search (in dashboard)
 

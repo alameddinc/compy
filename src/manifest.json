@@ -50,14 +50,14 @@
       "description": "Highlight selection and add a note"
     },
     "open-dashboard": {
-      "suggested_key": { "default": "Alt+Shift+D", "mac": "Alt+Shift+D" },
-      "description": "Open the notes dashboard"
+      "description": "Open the notes dashboard (bind a key at chrome://extensions/shortcuts)"
     },
     "add-page-note": {
       "suggested_key": { "default": "Alt+Shift+M", "mac": "Alt+Shift+M" },
       "description": "Add a page note (no highlight)"
     },
     "capture-screenshot": {
+      "suggested_key": { "default": "Alt+Shift+S", "mac": "Alt+Shift+S" },
       "description": "Screenshot the page & annotate it"
     },
     "_execute_action": {
