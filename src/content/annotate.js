@@ -318,7 +318,7 @@
     if (!W || !W.addShot) return flash("Save unavailable");
     try {
       await W.addShot({ dataUrl: canvas.toDataURL("image/png"), url: location.href, title: document.title, w: canvas.width, h: canvas.height });
-      flash("Saved to Compy ✓");
+      close(); // saved to the gallery — dismiss the editor (Copy/Download leave it open)
     } catch (e) {
       flash("Save failed — storage full?");
     }
