@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="../icons/icon128.png" />
+  <link rel="stylesheet" href="../lib/tokens.css" />
+  <title>Welcome to Compy</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px 72px; }
+
+    .hero {
+      position: relative; overflow: hidden; text-align: center; color: #fff;
+      padding: 64px 24px 72px; margin-bottom: -36px;
+      background: radial-gradient(120% 140% at 12% 0%, #7c3aed 0%, #6d28d9 46%, #4c1d95 100%);
+    }
+    .hero .glow { position: absolute; width: 520px; height: 520px; border-radius: 50%;
+      background: radial-gradient(circle, #a855f7 0%, transparent 68%); opacity: .38; right: -140px; top: -160px; }
+    .hero .logo { width: 84px; height: 84px; border-radius: 22px; background: #fff; display: grid;
+      place-items: center; margin: 0 auto 20px; box-shadow: 0 16px 40px rgba(0,0,0,.3); position: relative; z-index: 1; }
+    .hero .logo img { width: 60px; height: 60px; }
+    .hero h1 { font-size: 38px; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 10px; position: relative; z-index: 1; }
+    .hero p { font-size: 18px; color: #e9d5ff; margin: 0 auto; max-width: 540px; line-height: 1.5; position: relative; z-index: 1; }
+    .pill { display: inline-flex; align-items: center; gap: 7px; margin-top: 20px; padding: 7px 14px;
+      background: rgba(255,255,255,.15); border-radius: 999px; font-size: 13px; font-weight: 600;
+      backdrop-filter: blur(4px); position: relative; z-index: 1; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 26px 28px; position: relative; z-index: 2; }
+
+    h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3);
+      margin: 40px 4px 16px; }
+
+    .steps { display: grid; gap: 14px; }
+    .step { display: flex; gap: 16px; align-items: flex-start; padding: 16px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--surface); }
+    .step .n { flex: none; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
+      background: var(--primary-soft); color: var(--primary); }
+    .step .n svg { width: 18px; height: 18px; }
+    .step h3 { margin: 2px 0 4px; font-size: 15px; }
+    .step p { margin: 0; color: var(--text-2); font-size: 13.5px; line-height: 1.55; }
+    .step kbd, .kchip kbd { font-family: var(--mono); font-size: 11px; padding: 2px 6px; background: var(--surface-2);
+      border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 5px; color: var(--text-2); }
+
+    .kbds { display: flex; flex-wrap: wrap; gap: 10px; }
+    .kchip { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2);
+      background: var(--surface); border: 1px solid var(--border); padding: 9px 13px; border-radius: 10px; }
+    .kchip b { color: var(--text); font-weight: 600; }
+
+    .foot { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 36px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600;
+      padding: 11px 18px; border-radius: 10px; cursor: pointer; text-decoration: none; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); }
+    .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .btn.primary:hover { background: var(--primary-hover); }
+    .btn svg { width: 16px; height: 16px; }
+    .muted { color: var(--text-3); font-size: 13px; margin-left: auto; }
+
+    .tip { display: flex; gap: 12px; align-items: flex-start; margin-top: 18px; padding: 14px 16px;
+      background: var(--primary-soft); border-radius: var(--radius-sm); color: var(--text-2); font-size: 13.5px; line-height: 1.55; }
+    .tip svg { width: 18px; height: 18px; color: var(--primary); flex: none; margin-top: 1px; }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="glow"></div>
+    <div class="logo"><img src="../icons/icon128.png" alt="Compy" /></div>
+    <h1>Welcome to Compy</h1>
+    <p>Highlight & note anything on the web, capture and mark up screenshots, then hand your AI a clean, versioned task list.</p>
+    <span class="pill">🔒 100% local · no account · your data stays on your device</span>
+  </div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="steps">
+        <div class="step">
+          <span class="n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h10M4 17h7"/></svg></span>
+          <div><h3>1 · Highlight anything</h3>
+          <p>Select text on any page — a toolbar pops up. Pick a color; each color is a <b>tag</b> (Idea, Bug, For AI…). Hover a color to see its label. <kbd>Alt</kbd>+<kbd>⇧</kbd>+<kbd>H</kbd></p></div>
+        </div>
+        <div class="step">
+          <span class="n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+          <div><h3>2 · Add a note</h3>
+          <p>Click the <b>Note</b> button, or click any highlight later, to jot context. Or drop a page note not tied to any text. <kbd>Alt</kbd>+<kbd>⇧</kbd>+<kbd>M</kbd></p></div>
+        </div>
+        <div class="step">
+          <span class="n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h1.2a2 2 0 0 0 1.7-1l.6-1a2 2 0 0 1 1.7-1h3.6a2 2 0 0 1 1.7 1l.6 1a2 2 0 0 0 1.7 1H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+          <div><h3>3 · Screenshot & annotate</h3>
+          <p>Capture the visible page, draw boxes / arrows / text, then download, copy, or <b>Save</b> to your on-device gallery. <kbd>Alt</kbd>+<kbd>⇧</kbd>+<kbd>S</kbd></p></div>
+        </div>
+        <div class="step">
+          <span class="n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m0 12v3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M3 12h3m12 0h3M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1"/></svg></span>
+          <div><h3>4 · Copy for AI</h3>
+          <p>One click copies a <b>versioned Markdown task list</b> (note + quote + URL + #tag), grouped by site. Paste it to your AI agent — it sees exactly what to do.</p></div>
+        </div>
+        <div class="step">
+          <span class="n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <div><h3>5 · Done → Archive</h3>
+          <p>Mark a note (or a whole selection) done — it leaves the board and future exports, and lands in the Archive. Restore anytime.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Keyboard shortcuts</h2>
+    <div class="kbds">
+      <span class="kchip"><b>Highlight</b> <kbd>Alt</kbd><kbd>⇧</kbd><kbd>H</kbd></span>
+      <span class="kchip"><b>Page note</b> <kbd>Alt</kbd><kbd>⇧</kbd><kbd>M</kbd></span>
+      <span class="kchip"><b>Screenshot</b> <kbd>Alt</kbd><kbd>⇧</kbd><kbd>S</kbd></span>
+      <span class="kchip"><b>Dashboard</b> <kbd>Alt</kbd><kbd>⇧</kbd><kbd>D</kbd></span>
+    </div>
+
+    <div class="tip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+      <span><b>Pin Compy</b> for one-click access: click the puzzle-piece icon in Chrome's toolbar, then the pin next to Compy. All shortcuts are editable at <b>chrome://extensions/shortcuts</b>.</span>
+    </div>
+
+    <div class="foot">
+      <a class="btn primary" href="../dashboard/dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Open the dashboard
+      </a>
+      <a class="btn" href="https://en.wikipedia.org/wiki/Note-taking" target="_blank" rel="noopener">
+        Try it on a real page
+      </a>
+      <span class="muted">You can reopen this any time from the dashboard.</span>
+    </div>
+  </div>
+</body>
+</html>

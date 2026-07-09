@@ -2,6 +2,7 @@
    Commands, context menus, per-tab badge. */
 
 const DASHBOARD_URL = chrome.runtime.getURL("dashboard/dashboard.html");
+const WELCOME_URL = chrome.runtime.getURL("welcome/welcome.html");
 const CONTENT_FILES = ["lib/store.js", "content/anchor.js", "content/highlighter.js", "content/annotate.js", "content/content.js"];
 
 function openDashboard() {
@@ -48,7 +49,9 @@ async function ensureInjected(tabId, url) {
 }
 
 /* ---- install: context menus + inject into already-open tabs ---- */
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
+  // First install → open the welcome / how-it-works page.
+  if (details.reason === "install") chrome.tabs.create({ url: WELCOME_URL });
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({ id: "wln-highlight", title: "Highlight selection", contexts: ["selection"] });
     chrome.contextMenus.create({ id: "wln-highlight-note", title: "Highlight + add note", contexts: ["selection"] });
