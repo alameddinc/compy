@@ -76,6 +76,11 @@ Injects the content script that renders and manages your highlights and notes on
 Stores your highlights, notes, colors/labels, and settings locally in the browser (chrome.storage.local). Nothing is sent anywhere.
 ```
 
+**unlimitedStorage**
+```
+Compy lets users capture and annotate screenshots of web pages and save them to a local, on-device gallery. Screenshots are PNG images that quickly exceed Chrome's default 5 MB storage quota, so unlimitedStorage is required to store more than a handful of saved images. All screenshots and notes are kept locally in the browser (chrome.storage.local) — nothing is uploaded, transmitted, or shared. There is no server and no account.
+```
+
 **activeTab**
 ```
 Reads the current tab's URL and title when you open the popup so notes are shown for the correct page.
