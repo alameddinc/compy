@@ -184,5 +184,44 @@
     return out.join("\n");
   }
 
-  global.WLNExport = { CSV_COLUMNS, toCSV, parseCSV, toMarkdown, toMarkdownVersioned };
+  function hostOf(u) { try { return new URL(u).host; } catch { return u || ""; } }
+  function originOf(u) { try { return new URL(u).origin; } catch { return "(local)"; } }
+
+  // Structured JSON for the MCP bridge (read-only handoff to an AI agent).
+  // Stable `schema` so `compy-mcp` can parse across versions. Archived notes
+  // should be filtered out by the caller.
+  function toAIJSON(notes, opts = {}) {
+    const colorLabels = opts.colorLabels || {};
+    const bySite = new Map();
+    for (const n of notes) {
+      const origin = n.origin || originOf(n.url);
+      if (!bySite.has(origin)) bySite.set(origin, []);
+      const comments = commentTexts(n);
+      bySite.get(origin).push({
+        id: n.id,
+        url: n.url || "",
+        title: n.title || "",
+        type: n.type || (n.quote ? "highlight" : "page"),
+        label: colorLabels[n.color] || n.color || "",
+        color: n.color || "",
+        note: comments[0] || "",
+        moreNotes: comments.slice(1),
+        quote: (n.quote || "").trim(),
+        section: n.section || "",
+        selector: n.selector || "",
+        createdAt: new Date(n.createdAt || Date.now()).toISOString(),
+        updatedAt: new Date(n.updatedAt || Date.now()).toISOString()
+      });
+    }
+    const sites = [...bySite.entries()].map(([origin, tasks]) => ({ origin, host: hostOf(origin), tasks }));
+    return {
+      schema: "compy/v1",
+      generatedAt: new Date(opts.at || Date.now()).toISOString(),
+      context: (opts.context || "").trim(),
+      counts: { sites: sites.length, tasks: notes.length },
+      sites
+    };
+  }
+
+  global.WLNExport = { CSV_COLUMNS, toCSV, parseCSV, toMarkdown, toMarkdownVersioned, toAIJSON };
 })(typeof window !== "undefined" ? window : globalThis);

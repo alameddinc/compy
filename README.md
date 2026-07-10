@@ -31,6 +31,10 @@ and it moves to the archive. It's a scratchpad for you and a work queue for your
   visual bug to your AI.
 - **Screenshots gallery** — saved shots land in a private, on-device gallery (dashboard →
   Screenshots) you can browse, re-download, or delete. Never included in AI exports.
+- **Sync for AI (MCP)** — write a JSON snapshot of your notes to
+  `~/Downloads/compy/compy-export.json`, then let an AI agent search & read them via the
+  [compy-mcp](https://github.com/alameddinc/compy-mcp) Model Context Protocol bridge
+  (Claude Code, Claude Desktop…). Local & read-only — no account, no network.
 - **Export**
   - **Copy for AI** — a Markdown task list (note + quoted highlight + URL + `#label`), grouped by site.
   - **Domain-based versioning** — each site tracks its own version. "New & changed" sends only the
