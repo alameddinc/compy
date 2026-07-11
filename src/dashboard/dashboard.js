@@ -382,26 +382,8 @@
     toast(`Copied ${total} task${total === 1 ? "" : "s"} · ${domains.map((d) => "v" + d.version + " " + d.host).join(", ")}`);
   }
 
-  // Write a JSON snapshot to Downloads/compy/compy-export.json for the
-  // compy-mcp bridge to read (read-only handoff to a local AI agent).
-  async function syncForAI() {
-    const notes = all.filter((n) => !isArchived(n));
-    if (!notes.length) return toast("No notes to sync");
-    const json = WLNExport.toAIJSON(notes, { context: exportContext, colorLabels: colorLabelMap() });
-    const url = URL.createObjectURL(new Blob([JSON.stringify(json, null, 2)], { type: "application/json" }));
-    try {
-      await chrome.downloads.download({ url, filename: "compy/compy-export.json", conflictAction: "overwrite", saveAs: false });
-      toast(`Synced ${notes.length} task${notes.length === 1 ? "" : "s"} → Downloads/compy/compy-export.json`);
-    } catch (e) {
-      toast("Sync failed — is the downloads permission granted?");
-    } finally {
-      setTimeout(() => URL.revokeObjectURL(url), 4000);
-    }
-  }
-
   async function doExport(kind) {
     if (kind === "history") return openHistory();
-    if (kind === "sync") return syncForAI();
     if (kind === "ai") return doAiExport("delta");
     if (kind === "ai-all") return doAiExport("full");
     const notes = targetNotes();
