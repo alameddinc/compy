@@ -2,6 +2,20 @@
 
 All notable changes to Compy. Dates are release-ready, not necessarily store-approval dates.
 
+## 1.3.0
+
+**New — Notebooks & manual notes**
+- **＋ Add note** (dashboard header, or the ＋ next to Notebooks): jot a note without
+  visiting a page. Drop it into a **Notebook** (a website-less container) or attach it
+  to a **site** — with an optional **sub-category / path** (`papers/ml`, `settings/billing`).
+- **Notebooks** get their own sidebar section, separate from Sites. Each notebook is
+  just a virtual site, so it flows through the same **filter, search, versioning and
+  Copy-for-AI** pipeline you already use — notebook notes export right alongside web notes.
+- **Pin to top**: pin any note (📌 on the card or in the add dialog). Pinned notes sort
+  first. Pinning never counts as an edit, so it stays out of the export delta.
+- Manual/notebook notes can carry a **label/color** (set it in the add dialog or from the
+  card swatches).
+
 ## 1.2.1
 
 **Fixed**

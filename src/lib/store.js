@@ -56,10 +56,30 @@
     return `${h.slice(0,4).join("")}-${h.slice(4,6).join("")}-${h.slice(6,8).join("")}-${h.slice(8,10).join("")}-${h.slice(10,16).join("")}`;
   }
 
+  // Notebooks are website-less containers: a note whose url is
+  // `notebook:<name>/<optional/sub/path>`. They ride the SAME grouping,
+  // versioning, filter and export machinery as real sites — the notebook name
+  // acts as the "origin", the sub-path as the "page".
+  const NOTEBOOK_SCHEME = "notebook:";
+  function notebookRef(url) {
+    if (typeof url !== "string" || url.slice(0, NOTEBOOK_SCHEME.length) !== NOTEBOOK_SCHEME) return null;
+    const rest = url.slice(NOTEBOOK_SCHEME.length);
+    const i = rest.indexOf("/");
+    const name = (i === -1 ? rest : rest.slice(0, i)).trim();
+    const path = (i === -1 ? "" : rest.slice(i + 1)).replace(/^\/+|\/+$/g, "");
+    return { name, path };
+  }
+  function makeNotebookUrl(name, path) {
+    name = String(name || "").trim().replace(/\//g, " ");   // name is a single segment
+    path = String(path || "").trim().replace(/^\/+|\/+$/g, "");
+    return NOTEBOOK_SCHEME + name + (path ? "/" + path : "");
+  }
+
   // Normalize a URL to a stable key: origin + path only.
   // Query (?...) and hash (#...) are dropped so SPA UI-state in the URL
   // (filters, tabs) doesn't split notes across separate keys.
   function urlKey(url) {
+    if (notebookRef(url)) return url; // already clean; no query/hash to strip
     try {
       const u = new URL(url);
       return u.origin + u.pathname;
@@ -69,6 +89,8 @@
   }
 
   function originOf(url) {
+    const nb = notebookRef(url);
+    if (nb) return NOTEBOOK_SCHEME + nb.name;
     try { return new URL(url).origin; } catch { return ""; }
   }
 
@@ -90,6 +112,9 @@
     uid,
     urlKey,
     originOf,
+    notebookRef,
+    makeNotebookUrl,
+    NOTEBOOK_SCHEME,
 
     // Normalize legacy records to the comments[] model (non-destructive on read).
     _normalize(n) {
@@ -327,6 +352,16 @@
       log[scopeKey] = arr.slice(-30);
       await set({ [EXPORTS_KEY]: log });
       return log[scopeKey];
+    },
+    // Pin/unpin by id (does NOT touch updatedAt — pinning is not a content edit,
+    // so it must not pollute the export delta). Pinned notes sort to the top.
+    async setPinned(ids, on) {
+      const s = new Set(ids);
+      const raw = await get(NOTES_KEY, []);
+      let c = 0;
+      for (const n of raw) if (s.has(n.id)) { n.pinned = !!on; c++; }
+      await set({ [NOTES_KEY]: raw });
+      return c;
     },
     // Bulk archive/unarchive by id (does NOT touch updatedAt, to keep deltas clean).
     async setArchived(ids, on) {

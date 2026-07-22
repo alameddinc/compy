@@ -20,12 +20,18 @@
     trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>',
     open: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-    undo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 8"/></svg>'
+    undo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 8"/></svg>',
+    pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.5V4h6v6.5l2 3.5H7z"/></svg>'
   };
 
   const esc = (s) => (s || "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const AV_COLORS = ["#6366f1", "#ec4899", "#f59e0b", "#10b981", "#3b82f6", "#a855f7", "#ef4444", "#14b8a6"];
-  function hostOf(url) { try { return new URL(url).host; } catch { return "local"; } }
+  const isNbOrigin = (o) => typeof o === "string" && o.slice(0, 9) === "notebook:";
+  function hostOf(url) {
+    const nb = WLN.notebookRef && WLN.notebookRef(url);
+    if (nb) return nb.name || "Notebook";
+    try { return new URL(url).host; } catch { return "local"; }
+  }
   function avatar(host, size) {
     let h = 0; for (let i = 0; i < host.length; i++) h = (h * 31 + host.charCodeAt(i)) >>> 0;
     const bg = AV_COLORS[h % AV_COLORS.length];
@@ -72,7 +78,8 @@
       created: (a, b) => b.createdAt - a.createdAt,
       site: (a, b) => (a.origin || "").localeCompare(b.origin || "") || b.updatedAt - a.updatedAt
     }[state.sort];
-    return out.sort(cmp);
+    // Pinned notes float to the top, then the chosen sort applies.
+    return out.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || cmp(a, b));
   }
 
   function siteGroups(notes) {
@@ -92,7 +99,7 @@
     const pool = viewPool(); // sites/colors/tags reflect the current view
 
     $("#statNotes").textContent = active.length;
-    const activeSites = new Set(active.map((n) => n.origin || hostOf(n.url)));
+    const activeSites = new Set(active.map((n) => n.origin || WLN.originOf(n.url)).filter((o) => o && !isNbOrigin(o)));
     $("#statSites").textContent = activeSites.size;
     $("#allCount").textContent = active.length;
     const archNav = $("#archiveNav");
@@ -129,19 +136,30 @@
         || `<span style="font-size:11px;color:var(--text-3);padding:2px 4px;">No labels in view</span>`;
     }
 
-    // sites present in this view (notes, or screenshot origins in gallery view)
-    const sites = new Map();
+    // origins present in this view (notes, or screenshot origins in gallery view)
+    const origins = new Map();
     if (shotsView) {
-      for (const s of shots) { const key = s.origin || hostOf(s.url); sites.set(key, (sites.get(key) || 0) + 1); }
+      for (const s of shots) { const key = s.origin || WLN.originOf(s.url); origins.set(key, (origins.get(key) || 0) + 1); }
     } else {
-      for (const n of pool) { const key = n.origin || hostOf(n.url); sites.set(key, (sites.get(key) || 0) + 1); }
+      for (const n of pool) { const key = n.origin || WLN.originOf(n.url); origins.set(key, (origins.get(key) || 0) + 1); }
     }
-    const sorted = [...sites.entries()].sort((a, b) => b[1] - a[1]);
-    $("#siteList").innerHTML = sorted.map(([origin, count]) => {
+    const entries = [...origins.entries()].filter(([o]) => o).sort((a, b) => b[1] - a[1]);
+    const rowFor = ([origin, count]) => {
       const host = hostOf(origin);
       return `<div class="site-item ${state.site === origin ? "active" : ""}" data-site="${esc(origin)}">
         ${avatar(host, 16)}<span class="site-host">${esc(host)}</span><span class="site-count">${count}</span></div>`;
-    }).join("") || `<div style="font-size:12px;color:var(--text-3);padding:4px 8px;">No sites yet</div>`;
+    };
+    $("#siteList").innerHTML = entries.filter(([o]) => !isNbOrigin(o)).map(rowFor).join("")
+      || `<div class="side-empty">No sites yet</div>`;
+
+    // Notebooks: website-less containers. Hidden in the screenshots view.
+    const nbSection = $("#notebooksSection");
+    if (nbSection) {
+      const nbEntries = shotsView ? [] : entries.filter(([o]) => isNbOrigin(o));
+      nbSection.hidden = shotsView;
+      $("#notebookList").innerHTML = nbEntries.map(rowFor).join("")
+        || `<div class="side-empty">No notebooks yet — hit “＋ Add note”.</div>`;
+    }
   }
 
   /* ---------- content ---------- */
@@ -178,7 +196,7 @@
         return `<div class="group">
           <div class="group-head">${avatar(host, 18)}<span class="group-title">${esc(host)}</span>
             <span class="group-count">${ns.length}</span>
-            <a class="group-link" href="${esc(ns[0].url)}" target="_blank" rel="noopener">Open ↗</a></div>
+            ${isNbOrigin(origin) ? "" : `<a class="group-link" href="${esc(ns[0].url)}" target="_blank" rel="noopener">Open ↗</a>`}</div>
           <div class="grid">${ns.map(noteHTML).join("")}</div></div>`;
       }).join("");
     } else {
@@ -192,9 +210,13 @@
     const host = hostOf(n.url);
     const sel = state.selected.has(n.id);
     const isPage = n.type === "page" || !n.quote;
+    const nb = WLN.notebookRef ? WLN.notebookRef(n.url) : null;
+    const isNotebook = !!nb;
     const comments = commentsOf(n);
     const head = isPage
-      ? `<div class="note-quote note-pagehead"><span class="badge-page">PAGE NOTE</span></div>`
+      ? `<div class="note-quote note-pagehead">${isNotebook
+          ? `<span class="badge-page badge-nb">NOTEBOOK</span>${nb.path ? `<span class="nb-path">${esc(nb.path)}</span>` : ""}`
+          : `<span class="badge-page">PAGE NOTE</span>`}</div>`
       : `<div class="note-quote">${esc(n.quote)}</div>`;
     const body = comments.length
       ? `<div class="note-comments">${comments.map((c, i) =>
@@ -208,14 +230,16 @@
           ${avatar(host, 15)}
           <span class="note-host" title="${esc(n.url)}">${esc(host)}</span>
           <span class="note-time">${fmtDate(n.updatedAt)}</span>
+          ${n.pinned ? `<span class="note-pinned" title="Pinned">${ICON.pin}</span>` : ""}
         </div>
         ${head}
         <div class="note-body-wrap" data-role="body">${body}</div>
         <div class="note-tags"><span class="ntag" data-color="${n.color}" style="background:${color.hl};color:${color.ink}">${esc(labelOf(n.color))}</span></div>
         <div class="note-foot">
-          <div class="note-colors">${isPage ? "" : Object.keys(WLN.COLORS).map((k) =>
+          <div class="note-colors">${(isPage && !isNotebook) ? "" : Object.keys(WLN.COLORS).map((k) =>
             `<button class="nc ${k === n.color ? "on" : ""}" data-color="${k}" title="${WLN.COLORS[k].label}" style="background:${WLN.COLORS[k].dot}"></button>`).join("")}</div>
           ${isPage ? "" : `<a class="act" href="${esc(n.url)}" target="_blank" rel="noopener" title="Open page" data-act="open">${ICON.open}</a>`}
+          <button class="act ${n.pinned ? "pin-on" : ""}" data-act="pin" title="${n.pinned ? "Unpin" : "Pin to top"}">${ICON.pin}</button>
           <button class="act" data-act="edit" title="Edit notes">${ICON.edit}</button>
           <button class="act ${n.archivedAt ? "done-on" : "done-act"}" data-act="done" title="${n.archivedAt ? "Restore" : "Mark done"}">${n.archivedAt ? ICON.undo : ICON.check}</button>
           <button class="act danger" data-act="del" title="Delete">${ICON.trash}</button>
@@ -233,6 +257,13 @@
         updateSelbar();
       });
       el.querySelector('[data-act="del"]').addEventListener("click", () => removeNote(id, el));
+      el.querySelector('[data-act="pin"]').addEventListener("click", async () => {
+        const n = all.find((x) => x.id === id); const on = !n.pinned;
+        await WLN.setPinned([id], on);
+        if (n) n.pinned = on;
+        toast(on ? "Pinned to top" : "Unpinned");
+        renderContent();
+      });
       el.querySelector('[data-act="edit"]').addEventListener("click", () => editNote(id, el));
       el.querySelector('[data-act="done"]').addEventListener("click", async () => {
         const n = all.find((x) => x.id === id);
@@ -545,6 +576,56 @@
     toast(`Imported ${res.added} new, updated ${res.updated}`);
   }
 
+  /* ---------- add manual note (notebook or site) ---------- */
+  let addColor = WLN.DEFAULT_COLOR;
+  function renderAddColors() {
+    $("#addColors").innerHTML = Object.keys(WLN.COLORS).map((k) =>
+      `<button type="button" class="add-swatch ${k === addColor ? "on" : ""}" data-color="${k}" title="${esc(WLN.COLORS[k].label)}" style="background:${WLN.COLORS[k].dot}"></button>`).join("");
+  }
+  function openAddModal(prefill) {
+    addColor = WLN.DEFAULT_COLOR;
+    const origins = new Set(all.filter((n) => !isArchived(n)).map((n) => n.origin || WLN.originOf(n.url)).filter(Boolean));
+    const nbNames = [...origins].filter(isNbOrigin).map((o) => WLN.notebookRef(o).name);
+    const siteHosts = [...origins].filter((o) => !isNbOrigin(o)).map((o) => hostOf(o));
+    $("#nbSuggest").innerHTML = [...new Set([...nbNames, ...siteHosts])].map((v) => `<option value="${esc(v)}"></option>`).join("");
+    $("#addTarget").value = prefill || "";
+    $("#addPath").value = ""; $("#addText").value = ""; $("#addPin").checked = false;
+    renderAddColors();
+    $("#addModal").hidden = false;
+    setTimeout(() => (prefill ? $("#addText") : $("#addTarget")).focus(), 30);
+  }
+  // Decide whether the user typed a website or a notebook name, and build the url.
+  function resolveTarget(target, path) {
+    target = (target || "").trim(); path = (path || "").trim();
+    if (!target) return null;
+    const looksUrl = /^https?:\/\//i.test(target) || /^[\w-]+(\.[\w-]+)+(\/|$|:)/i.test(target);
+    if (looksUrl) {
+      const base = /^https?:\/\//i.test(target) ? target : "https://" + target;
+      try {
+        const u = new URL(base);
+        if (path) u.pathname = ("/" + u.pathname.replace(/^\/+|\/+$/g, "") + "/" + path.replace(/^\/+/, "")).replace(/\/{2,}/g, "/");
+        return { url: u.toString(), title: "", kind: "site" };
+      } catch { /* fall through to notebook */ }
+    }
+    const url = WLN.makeNotebookUrl(target, path);
+    const ref = WLN.notebookRef(url);
+    return { url, title: ref.path || ref.name, kind: "notebook" };
+  }
+  async function saveAddNote() {
+    const t = resolveTarget($("#addTarget").value, $("#addPath").value);
+    if (!t) { $("#addTarget").focus(); return toast("Enter a notebook name or website"); }
+    const text = $("#addText").value.trim();
+    const rec = await WLN.add({ type: "page", url: t.url, title: t.title, color: addColor, comments: text ? [WLN.mkComment(text)] : [] });
+    if ($("#addPin").checked) await WLN.setPinned([rec.id], true);
+    all = await WLN.getAll();
+    // Surface the new note: switch to its container so the user sees it land.
+    state.view = "active"; state.color = null;
+    state.site = rec.origin || WLN.originOf(rec.url);
+    $("#addModal").hidden = true;
+    renderAll();
+    toast(t.kind === "notebook" ? "Added to notebook" : "Note added");
+  }
+
   /* ---------- modal ---------- */
   let modalResolver = null;
   function askModal(title, msg) {
@@ -689,10 +770,29 @@
       state.color = state.color === d.dataset.color ? null : d.dataset.color;
       renderAll();
     });
-    $("#siteList").addEventListener("click", (e) => {
+    const siteClick = (e) => {
       const s = e.target.closest(".site-item"); if (!s) return;
       state.site = state.site === s.dataset.site ? "__all" : s.dataset.site;
       renderAll();
+    };
+    $("#siteList").addEventListener("click", siteClick);
+    $("#notebookList").addEventListener("click", siteClick);
+
+    // add manual note (notebook or site)
+    const addModal = $("#addModal");
+    const nbNameOfSelected = () => (isNbOrigin(state.site) ? WLN.notebookRef(state.site).name : "");
+    $("#addNoteBtn").addEventListener("click", () => openAddModal(nbNameOfSelected()));
+    $("#addNoteHead").addEventListener("click", () => openAddModal(nbNameOfSelected()));
+    $("#addCancel").addEventListener("click", () => (addModal.hidden = true));
+    $("#addSave").addEventListener("click", saveAddNote);
+    addModal.addEventListener("click", (e) => { if (e.target.id === "addModal") addModal.hidden = true; });
+    $("#addColors").addEventListener("click", (e) => {
+      const b = e.target.closest(".add-swatch"); if (!b) return;
+      addColor = b.dataset.color; renderAddColors();
+    });
+    addModal.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") saveAddNote();
+      if (e.key === "Escape") addModal.hidden = true;
     });
 
     $("#selectBtn").addEventListener("click", () => setSelectMode(!state.selectMode));

@@ -359,3 +359,23 @@ kbd { font-family: var(--mono); font-size: 10.5px; padding: 2px 5px; background:
 .cl-badge { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; flex: none; }
 .cl-del { width: 26px; height: 26px; border-radius: 7px; color: var(--text-3); flex: none; font-size: 14px; }
 .cl-del:hover { color: var(--danger); background: var(--danger-soft); }
+
+/* ---- notebooks + pin + add-note modal ---- */
+.side-empty { font-size: 11.5px; color: var(--text-3); padding: 4px 8px; line-height: 1.4; }
+.badge-nb { background: color-mix(in srgb, #a855f7 16%, transparent); color: #a855f7; }
+.nb-path { margin-left: 8px; font-size: 11px; color: var(--text-3); font-weight: 600; }
+.note-pinned { display: inline-flex; margin-left: auto; color: var(--primary); }
+.note-pinned svg { width: 13px; height: 13px; }
+.note-top .note-time { margin-left: auto; }
+.note-top .note-pinned { margin-left: 6px; }
+.act.pin-on { color: var(--primary); background: var(--primary-soft); }
+
+.add-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-2); margin: 12px 0 5px; }
+.add-label:first-of-type { margin-top: 4px; }
+.add-opt { font-weight: 400; color: var(--text-3); }
+.add-colors { display: flex; flex-wrap: wrap; gap: 7px; }
+.add-swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; transition: transform 100ms; }
+.add-swatch:hover { transform: scale(1.12); }
+.add-swatch.on { border-color: var(--text); }
+.add-pin { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 13px; color: var(--text-2); cursor: pointer; }
+.add-pin input { width: 15px; height: 15px; }

@@ -22,6 +22,10 @@ and it moves to the archive. It's a scratchpad for you and a work queue for your
   never lost.
 - **Popup** — all notes for the current page, orphans flagged, inline edit, jump-to-highlight.
 - **Dashboard** — every note across every site: search, filter by site/label, sort, bulk select.
+- **Notebooks & manual notes** — **＋ Add note** drops a note into a **Notebook** (a
+  website-less container) or onto a **site**, with an optional sub-category/path. Notebooks
+  are virtual sites, so they filter, search, version and **Copy for AI** exactly like real
+  pages. **Pin** any note to keep it on top.
 - **Colors are tags** — each color is a label (urgent, idea, blocked…). Rename any of the 9
   built-ins and add your own custom colors, all stored locally. Labels ride along in exports (`#urgent`).
 - **Done → Archive** — mark a note (or a whole selection) done; it leaves the board, the page,

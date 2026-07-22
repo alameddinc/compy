@@ -49,6 +49,15 @@
         <div id="colorFilter" class="label-filter"></div>
       </div>
 
+      <div id="notebooksSection" class="side-section side-sites">
+        <div class="side-head">Notebooks
+          <button id="addNoteHead" class="side-head-btn" title="Add a manual note" aria-label="Add note">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+        <div id="notebookList" class="site-list"></div>
+      </div>
+
       <div class="side-section side-sites">
         <div class="side-head">Sites</div>
         <div id="siteList" class="site-list"></div>
@@ -83,6 +92,10 @@
               <option value="site">By site</option>
             </select>
           </div>
+          <button id="addNoteBtn" class="btn btn-ghost btn-sm" title="Add a manual note to a notebook or site">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            Add note
+          </button>
           <button id="ctxBtn" class="btn btn-ghost btn-sm" title="Context prepended to AI/Markdown exports">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             AI context
@@ -157,6 +170,28 @@
       <div class="modal-actions">
         <button id="ctxCancel" class="btn btn-ghost">Cancel</button>
         <button id="ctxSave" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add manual note modal -->
+  <div id="addModal" class="modal-scrim" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="addTitle" style="max-width:480px;">
+      <h3 id="addTitle">Add a note</h3>
+      <p class="modal-msg">Jot a note into a <b>notebook</b> (no website needed) or attach it to a <b>site</b>. It joins the same versioned list you hand your AI.</p>
+      <label class="add-label">Notebook or website</label>
+      <input id="addTarget" class="modal-input" list="nbSuggest" placeholder="Research   ·   or   app.example.com" autocomplete="off" />
+      <datalist id="nbSuggest"></datalist>
+      <label class="add-label">Sub-category / path <span class="add-opt">(optional)</span></label>
+      <input id="addPath" class="modal-input" placeholder="e.g. papers/ml   or   settings/billing" autocomplete="off" />
+      <label class="add-label">Note</label>
+      <textarea id="addText" class="modal-input" style="height:96px;padding:10px 12px;resize:vertical;" placeholder="What do you want to remember?"></textarea>
+      <label class="add-label">Label</label>
+      <div id="addColors" class="add-colors"></div>
+      <label class="add-pin"><input type="checkbox" id="addPin" /> Pin to top</label>
+      <div class="modal-actions">
+        <button id="addCancel" class="btn btn-ghost">Cancel</button>
+        <button id="addSave" class="btn btn-primary">Add note</button>
       </div>
     </div>
   </div>
