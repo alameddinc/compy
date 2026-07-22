@@ -290,9 +290,7 @@
       const tas = body.querySelectorAll(".ne-text"); tas[tas.length - 1].focus();
     });
     const save = async () => {
-      if (tagInput.value.trim()) addTag(tagInput.value);
       await WLN.setComments(id, collect());
-      await WLN.update(id, { tags });
       all = await WLN.getAll();
       renderContent();
     };
@@ -418,8 +416,8 @@
       if (info.history && info.history.length) hasHistory = true;
     }
     const dh = $("#aiDeltaHint"), hh = $("#histHint");
-    if (dh) dh.textContent = deltaCount ? `· ${deltaCount} new` : "· up to date";
-    if (hh) hh.textContent = hasHistory ? "Re-copy any version" : "No versions yet";
+    if (dh) dh.textContent = deltaCount ? `· ${deltaCount} new` : "· nothing new";
+    if (hh) hh.textContent = hasHistory ? "Re-copy or preview any past version" : "No versions yet";
   }
 
   /* ---------- manage colors / labels ---------- */
@@ -463,30 +461,60 @@
     const log = await WLN.getExportLog();
     const inView = scopeOrigins();
     const keys = inView.length ? inView : Object.keys(log);
-    const rows = [];
+    // Group versions by site; newest first within each site.
+    const sites = [];
     for (const origin of keys) {
-      for (const v of (log[origin] || [])) rows.push({ ...v, origin, host: hostOf(origin) || origin });
+      const vers = (log[origin] || []).slice().sort((a, b) => b.version - a.version);
+      if (vers.length) sites.push({ origin, host: hostOf(origin) || origin, vers });
     }
-    rows.sort((a, b) => b.at - a.at);
-    $("#histScope").textContent = rows.length
-      ? `Past exports — re-copy any version, nothing is lost.`
-      : `No exports yet. Use “Copy for AI” to create v1.`;
+    sites.sort((a, b) => (b.vers[0].at) - (a.vers[0].at));
+
+    const total = sites.reduce((s, x) => s + x.vers.length, 0);
+    $("#histScope").textContent = total
+      ? `Every time you Copy for AI, Compy saves that exact text as a version. Nothing is lost — re-copy or preview any of them below.`
+      : `No versions yet. Hit “Copy for AI” and your first version (v1) shows up here.`;
+
+    // Flat index so buttons can address a single version.
+    const flat = [];
     const list = $("#histList");
-    list.innerHTML = rows.map((v, i) => `
-      <div class="hist-row" data-i="${i}">
-        <div class="hist-meta">
-          <span class="hist-ver">${esc(v.host)} v${v.version}</span>
-          <span class="hist-mode">${v.mode === "delta" ? "delta" : "full"}</span>
-          <span class="hist-count">${v.count} task${v.count === 1 ? "" : "s"}</span>
-          <span class="hist-time">${timeAgoShort(v.at)}</span>
+    list.innerHTML = sites.map((site) => {
+      const rows = site.vers.map((v) => {
+        const idx = flat.push({ ...v, host: site.host }) - 1;
+        const isLatest = v.version === site.vers[0].version;
+        const scope = v.mode === "delta" ? "only new since last time" : "everything";
+        return `
+        <div class="hist-row" data-i="${idx}">
+          <div class="hist-meta">
+            <span class="hist-ver">v${v.version}</span>
+            ${isLatest ? `<span class="hist-latest">latest</span>` : ""}
+            <span class="hist-count">${v.count} task${v.count === 1 ? "" : "s"}</span>
+            <span class="hist-scope">${scope}</span>
+            <span class="hist-time">${timeAgoShort(v.at)}</span>
+          </div>
+          <div class="hist-acts">
+            <button class="btn btn-ghost btn-sm hist-prev" data-i="${idx}">Preview</button>
+            <button class="btn btn-primary btn-sm hist-copy" data-i="${idx}">Copy</button>
+          </div>
         </div>
-        <button class="btn btn-ghost btn-sm hist-copy" data-i="${i}">Copy</button>
-      </div>`).join("") || `<p class="modal-msg" style="margin:0;">Nothing here yet.</p>`;
+        <pre class="hist-preview" data-i="${idx}" hidden></pre>`;
+      }).join("");
+      return `<div class="hist-site"><span class="hist-site-name">${esc(site.host)}</span><span class="hist-site-sub">${site.vers.length} version${site.vers.length === 1 ? "" : "s"}</span></div>${rows}`;
+    }).join("") || `<p class="modal-msg" style="margin:0;">Nothing here yet.</p>`;
+
     list.querySelectorAll(".hist-copy").forEach((b) => b.addEventListener("click", async () => {
-      const v = rows[Number(b.dataset.i)];
+      const v = flat[Number(b.dataset.i)];
       if (!v) return;
-      await navigator.clipboard.writeText(v.text || "");
+      try { await navigator.clipboard.writeText(v.text || ""); }
+      catch { return toast("Clipboard blocked"); }
       toast(`Re-copied ${v.host} v${v.version}`);
+    }));
+    list.querySelectorAll(".hist-prev").forEach((b) => b.addEventListener("click", () => {
+      const pre = list.querySelector(`.hist-preview[data-i="${b.dataset.i}"]`);
+      if (!pre) return;
+      const showing = !pre.hidden;
+      pre.hidden = showing;
+      if (!showing) pre.textContent = flat[Number(b.dataset.i)].text || "(empty)";
+      b.textContent = showing ? "Preview" : "Hide";
     }));
     $("#histModal").hidden = false;
   }

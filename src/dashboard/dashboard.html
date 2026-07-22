@@ -103,8 +103,8 @@
             </div>
             <div id="exportMenu" class="menu-pop export-pop" hidden>
               <div class="ep-head">Copy for AI <span id="aiDeltaHint" class="ep-hint"></span></div>
-              <button class="menu-opt" data-exp="ai"><b>New &amp; changed</b><span>Only what changed since last export (delta)</span></button>
-              <button class="menu-opt" data-exp="ai-all"><b>Everything</b><span>Full task list · new version</span></button>
+              <button class="menu-opt" data-exp="ai"><b>Only new &amp; changed</b><span>Just what you added or edited since last time → new version</span></button>
+              <button class="menu-opt" data-exp="ai-all"><b>Everything</b><span>The full task list again → new version</span></button>
               <div class="menu-div"></div>
               <div class="ep-head">Download</div>
               <div class="ep-chips">
@@ -113,7 +113,7 @@
                 <button class="ep-chip" data-exp="csvenc"><b>.csv</b><span>🔒 Encrypted</span></button>
               </div>
               <div class="menu-div"></div>
-              <button class="menu-opt" data-exp="history"><b>Export history…</b><span id="histHint">Re-copy any version</span></button>
+              <button class="menu-opt" data-exp="history"><b>Version history…</b><span id="histHint">Re-copy or preview any past version</span></button>
             </div>
           </div>
         </div>
@@ -177,7 +177,7 @@
   <!-- Export history modal -->
   <div id="histModal" class="modal-scrim" hidden>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="histTitle" style="max-width:520px;">
-      <h3 id="histTitle">Export history</h3>
+      <h3 id="histTitle">Version history</h3>
       <p class="modal-msg" id="histScope">Past versions for this scope. Re-copy any one — nothing is lost.</p>
       <div id="histList" class="hist-list"></div>
       <div class="modal-actions">
